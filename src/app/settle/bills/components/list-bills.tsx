@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -11,15 +12,33 @@ import {
 import Link from "next/link";
 import { BillDto } from "@/app/server/types/definitions";
 import { Pencil1Icon } from "@radix-ui/react-icons";
+import { listBillsByidMeetApi } from "@/app/server/apis/bill-api";
+import { useSearchParams } from "next/navigation";
 
-export default function ListBills({
-    nameMeet,
-    bills,
-}: {
-    nameMeet: string | undefined;
-    bills: BillDto[];
-}) {
-    console.log(">>> Listado de bills");
+export default function ListBills() {
+    const [bills, setBills] = useState<BillDto[]>([]);
+
+    // Query params
+    const searchParams = useSearchParams();
+
+    // Const
+    const idMeet: string = searchParams.get("idMeet")?.toString() as string;
+    const nameMeet = searchParams.get("name")?.toString();
+
+    console.log(">>>> home bill BillsHome :" + idMeet, nameMeet);
+
+    const findListBillsByIdMeet = async (idMeet: string) => {
+        const billsFromDB = await listBillsByidMeetApi(idMeet);
+        if (billsFromDB === undefined) {
+            setBills([]);
+        } else {
+            setBills(billsFromDB);
+        }
+    };
+
+    useEffect(() => {
+        findListBillsByIdMeet(idMeet);
+    }, [idMeet]);
 
     return (
         <Table>

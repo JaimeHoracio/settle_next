@@ -24,15 +24,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserDto } from "@/app/server/types/definitions";
-import RemoveUser from "@/app/settle/users/remove-user";
+import RemoveUser from "@/app/settle/users/components/remove-user";
 import { ResetIcon } from "@radix-ui/react-icons";
 
-export default function UsersPage({ params }) {
+export default function UsersPage() {
+    const { userLogged } = useUserLoggedStore((state) => state);
+    const nameUserLogged = userLogged?.name as string;
+
     const addFriendToUserStore = useUserLoggedStore(
         (state) => state.addFriendToUserStore
     );
-    console.log(">>> user logged en Users " + params);
-    const { nameUserLogged } = params;
+    console.log(">>> user logged en Users " + nameUserLogged);
 
     // Const
     const [inviteFriend, setInviteFriend] = useState("");
@@ -123,8 +125,7 @@ export default function UsersPage({ params }) {
                                         <div className="rounded-full flex flex-row justify-end items-center space-x-3">
                                             <RemoveUser
                                                 nameUserLogged={nameUserLogged}
-                                                oldFriend={f}
-                                            ></RemoveUser>
+                                                oldFriend={f}></RemoveUser>
                                         </div>
                                     </TableCell>
                                 </TableRow>

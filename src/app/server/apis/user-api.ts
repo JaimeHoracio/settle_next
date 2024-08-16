@@ -1,8 +1,8 @@
 'use server'
 
-import { connectMongoDB, disconnectMongoDB } from "../mongo-db/config/mongo-config";
-import UserLoggedModel from "../mongo-db/models/user-login.model";
-import { UserDto } from "../types/definitions";
+import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
+import UserLoggedModel from "@/app/server/mongo-db/models/user-login.model";
+import { UserDto } from "@/app/server/types/definitions";
 
 // const userList = users.map(user => ({
 //     id: user.id,
