@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { UserLogged } from "@/app/store/user-logged";
+import { useUserLoggedStore } from "@/app/store/user-logged";
 import { useRef } from "react";
 
 // Map of links to display in the side navigation.
@@ -22,11 +22,11 @@ const links = [
 ];
 
 export default function NavLinks() {
-    const isUserLogged = useRef(false);
-    const nameUserLogged: string | undefined = UserLogged()?.name;
-    const router = useRouter();
+    const { userLogged } = useUserLoggedStore((state) => state);
+    const nameUserLogged = userLogged?.name as string;
 
-    console.log(">>> user logged in NAV: " + nameUserLogged);
+    const isUserLogged = useRef(false);
+    const router = useRouter();
 
     if (!nameUserLogged) {
         router.push("/");

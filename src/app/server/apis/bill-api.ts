@@ -1,11 +1,11 @@
 'use server'
 
-import { connectMongoDB, disconnectMongoDB } from "../mongo-db/config/mongo-config";
-import BillModel from "../mongo-db/models/bill.model";
-import { BillDB } from "../mongo-db/types/bill-db";
+import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
+import BillModel from "@/app/server/mongo-db/models/bill.model";
+import { BillDto } from "@/app/server/types/definitions";
 
 
-export async function addBillApi(bill: BillDB) {
+export async function addBillApi(bill: BillDto) {
     try {
         await connectMongoDB()
         return await BillModel.create(bill);
@@ -17,7 +17,7 @@ export async function addBillApi(bill: BillDB) {
     }
 }
 
-export async function updateBillApi(bill: BillDB) {
+export async function updateBillApi(bill: BillDto) {
     try {
         await connectMongoDB()
 

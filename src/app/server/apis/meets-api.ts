@@ -1,8 +1,8 @@
 'use server'
 
-import { connectMongoDB, disconnectMongoDB } from "../mongo-db/config/mongo-config";
-import { MeetDto, MeetSelectDto } from "../types/definitions";
-import MeetModel from "../mongo-db/models/meet.model";
+import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
+import { MeetDto, MeetSelectDto } from "@/app/server/types/definitions";
+import MeetModel from "@/app/server/mongo-db/models/meet.model";
 
 
 export async function createMeetApi(meet: MeetDto) {
@@ -101,7 +101,7 @@ export async function listMeetsActiveByUserNameForSelectApi(nameUser: string) {
         }
         const result: MeetSelectDto[] = []
         list.map((m) => {
-            result.push({ idMeet: m.idMeet, name: m.name, primary: m.primary })
+            result.push({ idMeet: m.idMeet, name: m.name, primary: m.primary ? false : m.primary as boolean })
         })
         return result
     } catch (error) {

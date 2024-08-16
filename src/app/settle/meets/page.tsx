@@ -9,7 +9,6 @@ import HeadListMeet from "./components/header-list-meet";
 
 export default function HomeListMeetsPage() {
     const { userLogged } = useUserLoggedStore((state) => state);
-
     const nameUserLogged = userLogged?.name as string;
 
     const [meets, setMeets] = useState<MeetDto[]>([]);
