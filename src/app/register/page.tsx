@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import {
     existUserLoggedByNameApi,
     registerUserLoggedApi,
-} from "../server/apis/user-api";
+} from "@/app/server/apis/user-api";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
-import { UserLoggedDto } from "../server/types/definitions";
+import { UserLoggedDto } from "@/app/server/types/definitions";
+import Link from "next/link";
+import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function FormLogin() {
     const router = useRouter();
@@ -52,10 +53,9 @@ export default function FormLogin() {
                             };
                             updateFriendsUserStore([ownUser]);
 
-                            const meet_url = `/settle/meets/${name.trim().toLowerCase()}`;
-                            router.push(meet_url);
+                            router.push(HOME_MEETS_URL);
                         } else {
-                            console.log(
+                            console.error(
                                 "Error al registrar el usuario, intente en unos minutos."
                             );
                         }
@@ -112,8 +112,7 @@ export default function FormLogin() {
                 </div>
                 <form
                     onSubmit={registerUserHandler}
-                    className="space-y-12 w-full sm:w-[400px]"
-                >
+                    className="space-y-12 w-full sm:w-[400px]">
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="name">Nombre</Label>
                         <Input

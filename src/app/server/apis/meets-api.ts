@@ -7,14 +7,11 @@ import MeetModel from "@/app/server/mongo-db/models/meet.model";
 
 export async function createMeetApi(meet: MeetDto) {
     try {
-
-        console.log(">>> add meet: " + JSON.stringify(meet))
-
         await connectMongoDB()
         await MeetModel.create({ idMeet: meet.idMeet, createdBy: meet.createdBy, name: meet.name, details: meet.details, active: true });
 
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -28,7 +25,7 @@ export async function updateMeetApi(meet: MeetDto) {
         await MeetModel.findOneAndUpdate(query, { name: meet.name, details: meet.details, updatedAt: new Date() });
 
     } catch (error) {
-        console.log(">>> Error updateMeetApi: " + error)
+        console.error(">>> Error updateMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -44,7 +41,7 @@ export async function closeMeetApi(idMeet: string) {
         await MeetModel.findOneAndUpdate(query, update);
 
     } catch (error) {
-        console.log(">>> Error closeMeetApi: " + error)
+        console.error(">>> Error closeMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -55,7 +52,7 @@ export async function removeMeetApi(idMeet: string) {
         await connectMongoDB()
         await MeetModel.deleteOne({ idMeet });
     } catch (error) {
-        console.log(">>> Error removeMeetApi: " + error)
+        console.error(">>> Error removeMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -85,7 +82,7 @@ export async function listMeetsActiveByUserNameApi(nameUser: string) {
 
         return meetsList
     } catch (error) {
-        console.log(">>> Error listMeetsActiveByUserNameApi: " + error)
+        console.error(">>> Error listMeetsActiveByUserNameApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -105,7 +102,7 @@ export async function listMeetsActiveByUserNameForSelectApi(nameUser: string) {
         })
         return result
     } catch (error) {
-        console.log(">>> Error listMeetsActiveByUserNameForSelectApi: " + error)
+        console.error(">>> Error listMeetsActiveByUserNameForSelectApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -117,7 +114,7 @@ export async function listMeetsNonActiveByIdUserApi(nameUser: string) {
         let list = await MeetModel.find({ "createdBy.name": nameUser, active: false }).exec();
         return list
     } catch (error) {
-        console.log(">>> Error listMeetsNonActiveByIdUserApi: " + error)
+        console.error(">>> Error listMeetsNonActiveByIdUserApi: " + error)
     } finally {
         await disconnectMongoDB();
     }

@@ -412,16 +412,19 @@ const MultipleSelector = React.forwardRef<
                         inputRef.current?.focus();
                     }}
                 >
-                    <div className="flex">
+                    <div className="flex space-x-1">
                         {selected.map((option) => {
                             return (
                                 <Badge
                                     key={option.value}
+                                    variant="outline"
+                                    /* HZ - ANTES ESTABA ESTO, LO COMENTO.
                                     className={cn(
                                         "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground",
                                         "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",
                                         badgeClassName
                                     )}
+                                    */
                                     data-fixed={option.fixed}
                                     data-disabled={disabled || undefined}
                                 >

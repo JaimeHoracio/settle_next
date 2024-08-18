@@ -18,23 +18,19 @@ export default function SelectMeet({
 }) {
     let defaultMeet = defaultValue;
 
-    const selectHandler = (selected: string) => {
+    const selectMeetHandler = (selected: string) => {
         console.log(">> valor seleccionado hijo: " + selected);
         //setSelectMeedChild(selected);
     };
 
     let meets: MeetSelectDto[] = [];
 
-    console.log(">>> defaultMeet antes: " + defaultMeet);
-
     if ((!defaultValue || defaultValue === "") && meets.length > 0) {
         defaultMeet = meets[0].idMeet;
     }
 
-    console.log(">>> defaultMeet despues: " + defaultMeet);
-
     return (
-        <Select defaultValue={defaultMeet} onValueChange={selectHandler}>
+        <Select defaultValue={defaultMeet} onValueChange={selectMeetHandler}>
             <SelectTrigger className="w-auto">
                 <SelectValue placeholder="Encuentros" />
             </SelectTrigger>
@@ -42,7 +38,7 @@ export default function SelectMeet({
                 <SelectGroup>
                     <SelectLabel>Encuentros</SelectLabel>
                     {meets.map((m) => (
-                        <SelectItem key={m.idMeet} value={m.idMeet}>
+                        <SelectItem key={m.idMeet} value={m.name}>
                             {m.name}
                         </SelectItem>
                     ))}

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserLoggedStore } from "@/app/store/user-logged";
 import { useRef } from "react";
+import { ROOT_SETTLE_URL } from "@/app/settle/components/constants";
 
 // Map of links to display in the side navigation.
 const links = [
@@ -22,14 +23,15 @@ const links = [
 ];
 
 export default function NavLinks() {
+    const router = useRouter();
+
     const { userLogged } = useUserLoggedStore((state) => state);
     const nameUserLogged = userLogged?.name as string;
 
     const isUserLogged = useRef(false);
-    const router = useRouter();
 
     if (!nameUserLogged) {
-        router.push("/");
+        router.push(ROOT_SETTLE_URL);
     } else {
         isUserLogged.current = true;
     }

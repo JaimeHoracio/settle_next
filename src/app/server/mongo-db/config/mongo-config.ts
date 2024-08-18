@@ -14,19 +14,17 @@ export const connectMongoDB = async () => {
                 autoCreate: true
             }
             const connect = await mongoose.connect(MONGODB_URI, option)
-            //console.log(">>> MongoDB is connected!!")
             return connect
         } catch (error) {
-            console.log(">>> Error: " + error)
+            console.error(">>> Error: " + error)
             return false
         }
     } else {
-        console.log(">>> Error: Mongo URI not found.")
+        console.error(">>> Error: Mongo URI not found.")
     }
 }
 
 export const disconnectMongoDB = async () => {
-    //console.log(">>> MongoDB is disconnected!!")
     await mongoose.disconnect();
 }
 

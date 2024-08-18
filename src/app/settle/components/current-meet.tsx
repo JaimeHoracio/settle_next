@@ -1,19 +1,15 @@
 "use client";
 
+import { useMeetSelectedStore } from "@/app/store/meet-selected";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React from "react";
-
-const HOME_MEETS_URL = "/settle/meets";
+import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function CurrentMeet() {
-    const searchParams = useSearchParams();
-    console.log(">>> Search Params - AddBillPage: " + searchParams);
-
+    const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     // Const
-    const nameMeet = searchParams.get("name")?.toString();
+    const nameMeet = meetSelectedStore ? meetSelectedStore.nameMeet : "";
 
     return (
         <div className="flex flex-row justify-start text-sm">

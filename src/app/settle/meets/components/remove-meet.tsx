@@ -25,7 +25,6 @@ export default function RemoveMeet({
 
     // Maneja el clic del botón
     const handleButtonClick = async (isAllowRemove: boolean) => {
-        console.log(">>> remove meet: " + loading);
         setLoading(true);
         if (isAllowRemove) {
             await removeMeetApi(idMeet);

@@ -12,8 +12,7 @@ import {
     UserStore,
     useUserLoggedStore,
 } from "@/app/store/user-logged";
-
-const HOME_BILL_URL = "/settle/bills";
+import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 
 export default function AddBill() {
     const { userLogged } = useUserLoggedStore((state) => state);
@@ -21,7 +20,6 @@ export default function AddBill() {
 
     // Query params
     const searchParams = useSearchParams();
-    console.log(">>> Search Params - AddBillPage: " + searchParams);
 
     // Const
     const nameMeet = searchParams.get("name")?.toString();
@@ -30,7 +28,6 @@ export default function AddBill() {
     const default_amount = searchParams.get("amount")?.toString();
 
     const friends: UserStore[] | undefined = FriendsUserLogged();
-    console.log(">>> add bill");
 
     const listFriends: Option[] = friends.map((f) => ({
         label: f.label,
@@ -66,12 +63,12 @@ export default function AddBill() {
         setLoading(false);
     };
 
-    const selectedCurrencyHandler = (selectedMeet: string) => {
+    const selectCurrencyHandler = (selectedMeet: string) => {
         console.log("Desde el padre - meet selected: " + selectedMeet);
     };
 
     const goBack = () => {
-        router.push(`${HOME_BILL_URL}?name=${nameMeet}`);
+        router.push(HOME_BILLS_URL);
     };
 
     return (
@@ -99,7 +96,7 @@ export default function AddBill() {
                     <SelectCurrency
                         defaultValue="UYU"
                         selectedCurrencyFromChild={
-                            selectedCurrencyHandler
+                            selectCurrencyHandler
                         }></SelectCurrency>
                 </div>
                 <Label htmlFor="details">Pagador</Label>
@@ -110,7 +107,7 @@ export default function AddBill() {
                     defaultOptions={listFriends}
                     emptyIndicator={
                         <p className="text-center text-xs leading-10 bg-transparent dark:text-gray-400">
-                            Vacío.
+                            No hay usuarios.
                         </p>
                     }></MultipleSelector>
                 <Label htmlFor="details">Deudores</Label>
@@ -121,15 +118,9 @@ export default function AddBill() {
                     defaultOptions={listFriends}
                     emptyIndicator={
                         <p className="text-center text-xs leading-10 bg-transparent dark:text-gray-400">
-                            Vacío.
+                            No hay usuarios.
                         </p>
                     }></MultipleSelector>
-
-                <Button
-                    variant="link"
-                    className="text-left text-indigo-500 hover:underline">
-                    Opciones
-                </Button>
 
                 <div className="flex flex-row justify-end space-x-4 py-4">
                     <Button onClick={goBack}>Cancelar</Button>

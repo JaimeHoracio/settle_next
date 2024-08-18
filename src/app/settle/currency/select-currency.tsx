@@ -17,7 +17,6 @@ export default function SelectCurrency({
     selectedCurrencyFromChild: (x: string) => void;
 }) {
     const selectHandler = (selected: string) => {
-        console.log(">> valor seleccionado hijo: " + selected);
         selectedCurrencyFromChild(selected);
     };
 

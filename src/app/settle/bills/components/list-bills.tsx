@@ -9,30 +9,23 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
 import { BillDto } from "@/app/server/types/definitions";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { listBillsByidMeetApi } from "@/app/server/apis/bill-api";
-import { useSearchParams } from "next/navigation";
+import { useMeetSelectedStore } from "@/app/store/meet-selected";
 
 export default function ListBills() {
+    const { meetSelectedStore } = useMeetSelectedStore((state) => state);
+    // Const
+    const idMeet = meetSelectedStore ? meetSelectedStore.idMeet : "";
     const [bills, setBills] = useState<BillDto[]>([]);
 
-    // Query params
-    const searchParams = useSearchParams();
-
-    // Const
-    const idMeet: string = searchParams.get("idMeet")?.toString() as string;
-    const nameMeet = searchParams.get("name")?.toString();
-
-    console.log(">>>> home bill BillsHome :" + idMeet, nameMeet);
-
     const findListBillsByIdMeet = async (idMeet: string) => {
-        const billsFromDB = await listBillsByidMeetApi(idMeet);
-        if (billsFromDB === undefined) {
+        if (!idMeet) {
             setBills([]);
         } else {
-            setBills(billsFromDB);
+            const billsFromDB = await listBillsByidMeetApi(idMeet);
+            setBills(billsFromDB ? billsFromDB : []);
         }
     };
 
@@ -54,11 +47,7 @@ export default function ListBills() {
                 {bills.map((b) => (
                     <TableRow key={b.idMeet}>
                         <TableCell className="font-medium">
-                            <Link
-                                key={b.idMeet}
-                                href={`/settle/bills?name=${b.reference}`}>
-                                {b.reference}
-                            </Link>
+                            {b.reference}
                         </TableCell>
                         <TableCell>{b.createdBy}</TableCell>
                         <TableCell>

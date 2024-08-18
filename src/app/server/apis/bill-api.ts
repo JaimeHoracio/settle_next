@@ -11,7 +11,7 @@ export async function addBillApi(bill: BillDto) {
         return await BillModel.create(bill);
 
     } catch (error) {
-        console.log(">>> Error addBillApi:" + error)
+        console.error(">>> Error addBillApi:" + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -26,7 +26,7 @@ export async function updateBillApi(bill: BillDto) {
         await BillModel.findOneAndUpdate(query, bill);
 
     } catch (error) {
-        console.log(">>> Error updateBillApi:" + error)
+        console.error(">>> Error updateBillApi:" + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -41,7 +41,7 @@ export async function removeBillApi(idBill: string) {
         return await BillModel.deleteOne(query);
 
     } catch (error) {
-        console.log(">>> Error removeBillApi:" + error)
+        console.error(">>> Error removeBillApi:" + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -53,7 +53,7 @@ export async function listBillsByidMeetApi(idMeet: string) {
         let list = await BillModel.find({ idMeet }).exec();
         return list
     } catch (error) {
-        console.log(">>> Error :" + error)
+        console.error(">>> Error :" + error)
     } finally {
         await disconnectMongoDB();
     }

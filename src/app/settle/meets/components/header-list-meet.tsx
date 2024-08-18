@@ -3,8 +3,7 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-
-const ADD_MEETS_URL = "/settle/meets/add-meet";
+import { ADD_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function HeadListMeet() {
     return (

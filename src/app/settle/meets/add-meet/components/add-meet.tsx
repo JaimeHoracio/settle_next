@@ -12,8 +12,7 @@ import { createMeetApi, updateMeetApi } from "@/app/server/apis/meets-api";
 import { MeetDto, UserDto } from "@/app/server/types/definitions";
 import { goToPath } from "@/app/utils/go-to-path";
 import { useUserLoggedStore } from "@/app/store/user-logged";
-
-const MEET_URL = "/settle/meets";
+import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function AddMeet() {
     const { userLogged } = useUserLoggedStore((state) => state);
@@ -21,7 +20,6 @@ export default function AddMeet() {
 
     // Query params
     const searchParams = useSearchParams();
-    console.log(">>> Search Params: " + searchParams);
 
     // Const
     // Estos datos existen si se esta haciendo una modificación solamente.
@@ -37,22 +35,13 @@ export default function AddMeet() {
     const details = useRef<HTMLInputElement>(null);
     const primary = useRef<string | null>(null);
 
-    console.log(
-        ">>>> idMeet " +
-            idMeet +
-            " - name:" +
-            name.current?.value +
-            " - details: " +
-            details.current?.value
-    );
-
     //Methods
     const addMeetMethod = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         if (!name.current?.value) {
-            console.log("El nombre es obligatorio.");
+            console.warn("El nombre es obligatorio.");
         } else {
             try {
                 const user: UserDto = { idUser: "", name: nameUserLogged };
@@ -78,14 +67,14 @@ export default function AddMeet() {
                 //Vuelvo al home de Settle
                 goBack();
             } catch (error) {
-                console.log(">>> Error: " + error);
+                console.error(">>> Error: " + error);
             }
         }
         setLoading(false);
     };
 
     const goBack = () => {
-        goToPath(MEET_URL);
+        goToPath(HOME_MEETS_URL);
     };
     return (
         <form onSubmit={addMeetMethod}>
@@ -111,7 +100,7 @@ export default function AddMeet() {
             <div className="flex flex-row justify-end space-x-4 py-4">
                 <Button onClick={goBack}>Cancelar</Button>
                 <Button type="submit" disabled={loading}>
-                    {idMeet ? "Actualizar" : "Crear"}
+                    {idMeet ? "Actualizar Encuentro" : "Crear Encuentro"}
                 </Button>
             </div>
         </form>

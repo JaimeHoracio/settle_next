@@ -29,11 +29,11 @@ export async function getUserLoggedApi(name: string, pass: string) {
                 friends: friends
             }
         } else {
-            console.log(">>> No se encontró el usuario.")
+            console.warn(">>> No se encontró el usuario.")
         }
         return undefined;
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -49,7 +49,7 @@ export async function existUserLoggedByNameApi(name: string) {
         return user ? true : false;
 
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -59,8 +59,6 @@ export async function registerUserLoggedApi(name: string, pass: string) {
     try {
         await connectMongoDB()
         const user = await UserLoggedModel.create({ name, password: pass, createdAt: new Date().toISOString(), friends: [] });
-
-        //console.log(">>> User registerUserLoggedApi: " + JSON.stringify(user))
         return {
             idUser: user._id,
             name: user.name,
@@ -69,7 +67,7 @@ export async function registerUserLoggedApi(name: string, pass: string) {
         }
 
     } catch (error) {
-        console.log(">>> Error RegisterUserLoggedApi: " + error)
+        console.error(">>> Error RegisterUserLoggedApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -91,7 +89,7 @@ export async function findFriendsByNameApi(name: string) {
         }
         return undefined;
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -110,7 +108,7 @@ export async function addFriendToUserLoggedApi(nameParent: string, newFriend: Us
         await UserLoggedModel.updateOne(query, { $push: { friends: new_friends_db } });
 
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -128,7 +126,7 @@ export async function removeFriendToUserLoggedApi(nameParent: string, oldFriend:
         await UserLoggedModel.updateOne(query, { $pull: { friends: old_friends_db } });
 
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }
@@ -146,7 +144,7 @@ export async function updateFriendByNameParentApi(nameParent: string, newFriends
         await UserLoggedModel.findOneAndUpdate(query, { friends: new_friends_db });
 
     } catch (error) {
-        console.log(">>> Error createMeetApi: " + error)
+        console.error(">>> Error createMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }

@@ -9,7 +9,9 @@ export default function AddBillPage() {
         <article>
             <Suspense fallback={<div>Loading...</div>}>
                 <CurrentMeet></CurrentMeet>
-                <HeadAddBill></HeadAddBill>
+            </Suspense>
+            <HeadAddBill></HeadAddBill>
+            <Suspense fallback={<div>Loading...</div>}>
                 <AddBill></AddBill>
             </Suspense>
         </article>

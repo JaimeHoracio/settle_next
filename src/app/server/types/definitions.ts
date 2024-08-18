@@ -7,6 +7,11 @@ export interface UserLoggedDto {
     friends: UserDto[]
 }
 
+export interface MeetSelectedDto {
+    idMeet: string
+    nameMeet: string
+}
+
 export interface UserDto {
     idUser: string
     name: string

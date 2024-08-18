@@ -13,6 +13,7 @@ import { TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { goToPath } from "@/app/utils/go-to-path";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
+import { HOME_USERS_URL } from "@/app/settle/components/constants";
 
 export default function RemoveUser({
     nameUserLogged,
@@ -34,8 +35,7 @@ export default function RemoveUser({
         });
         removeFriendToUserStore(oldFriend.value);
         setIsOpen(false); // Cierra el diálogo
-        const user_path = `/settle/users/${nameUserLogged}`;
-        goToPath(user_path);
+        goToPath(HOME_USERS_URL);
     };
 
     return (

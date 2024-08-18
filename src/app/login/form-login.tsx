@@ -10,8 +10,7 @@ import { useState } from "react";
 import { getUserLoggedApi } from "@/app/server/apis/user-api";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
 import { UserLoggedDto } from "../server/types/definitions";
-
-const HOME_MEETS_URL = "/settle/meets";
+import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function FormLogin() {
     const { updateUserLoggedStore, updateFriendsUserStore } =
@@ -45,9 +44,7 @@ export default function FormLogin() {
                     value: userFromServer.idUser,
                 };
 
-                console.log(
-                    ">>> agrego a usuario logueado: " + JSON.stringify(ownUser)
-                );
+                console.log(">>> Usuario logueado: " + JSON.stringify(ownUser));
 
                 // Se agrega a si mismo a la lista de amigos.
                 usersStore.push(ownUser);
@@ -65,7 +62,7 @@ export default function FormLogin() {
                 setLoading(false);
             }
         } catch (error) {
-            console.log(">>> Error: " + error);
+            console.error(">>> Error: " + error);
             setLoading(false);
         }
     };

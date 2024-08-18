@@ -1,5 +1,6 @@
-import React from "react";
+"use client";
 
+import React, { useCallback, useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -8,50 +9,144 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { MeetDto } from "@/app/server/types/definitions";
 import RemoveMeet from "@/app/settle/meets/components/remove-meet";
-import Link from "next/link";
 
-export default function ListMeets({
-    meets,
-    refresh,
-}: {
-    meets: MeetDto[];
-    refresh: (x: boolean) => void;
-}) {
+import { listMeetsActiveByUserNameApi } from "@/app/server/apis/meets-api";
+import { useUserLoggedStore } from "@/app/store/user-logged";
+import { useMeetSelectedStore } from "@/app/store/meet-selected";
+import { HOME_BILLS_URL } from "@/app/settle/components/constants";
+
+export default function ListMeets() {
+    const { userLogged } = useUserLoggedStore((state) => state);
+    const nameUserLogged = userLogged?.name as string;
+
+    const { meetSelectedStore } = useMeetSelectedStore((state) => state);
+    const { updateMeetSelectedStore } = useMeetSelectedStore((state) => state);
+
+    const [meets, setMeets] = useState<MeetDto[]>([]);
+
+    const initFalseMeetSelecteded = useCallback(() => {
+        return Array.from({ length: meets.length }, (val, index) => false);
+    }, [meets]);
+
+    const [meetSelected, setMeetSelected] = useState<boolean[]>(
+        initFalseMeetSelecteded()
+    );
+
+    const getListMeetsFromDB = async () => {
+        const list: MeetDto[] | undefined =
+            await listMeetsActiveByUserNameApi(nameUserLogged);
+        if (list) {
+            setMeets(list);
+
+            // Selecciono el MEET por defecto.
+            selectDefaultMainMeetSelected(list);
+        }
+    };
+
+    const refreshAction = (reload: boolean) => {
+        if (reload) {
+            getListMeetsFromDB();
+        }
+    };
+
+    const persistStateMainMeetSelected = (
+        index: number,
+        meetsList: MeetDto[]
+    ) => {
+        // Guardar el MEET seleccionado para trabajar como alcance global.
+        const meet_selected = {
+            idMeet: meetsList[index].idMeet,
+            nameMeet: meetsList[index].name,
+        };
+        updateMeetSelectedStore(meet_selected);
+    };
+
+    const changeMainMeetSelected = (index: number) => {
+        let checkedList = initFalseMeetSelecteded();
+        checkedList[index] = true;
+        setMeetSelected(checkedList);
+
+        persistStateMainMeetSelected(index, meets);
+    };
+
+    const selectDefaultMainMeetSelected = async (meetsList: MeetDto[]) => {
+        if (meetsList.length > 0) {
+            let checkedList = meetSelected;
+
+            // Chequeo si ya elegí un encuentro por defecto
+            if (!meetSelectedStore) {
+                // Si no elegí selecciono el primero por defecto para trabajar.
+                checkedList[0] = true;
+
+                persistStateMainMeetSelected(0, meetsList);
+            } else {
+                // Busco el indice para configurar el meet por defecto
+                const index = meetsList.findIndex(
+                    (m) => m.idMeet === meetSelectedStore.idMeet
+                );
+                checkedList[index] = true;
+            }
+
+            // Seteo el meet seleccionado.
+            setMeetSelected(checkedList);
+        }
+    };
+
+    useEffect(() => {
+        getListMeetsFromDB();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Table>
             <TableHeader>
                 <TableRow>
+                    <TableHead className="w-[150px]">Principal</TableHead>
                     <TableHead className="w-[150px]">Nombre</TableHead>
                     <TableHead>Descripción</TableHead>
                     <TableHead>Creador</TableHead>
+                    <TableHead>F. Creación</TableHead>
                     <TableHead className="text-right">Acción</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {meets.map((m) => (
+                {meets.map((m, index) => (
                     <TableRow key={m.idMeet}>
                         <TableCell className="font-medium">
-                            <Link
-                                key={m.idMeet}
-                                href={`/settle/bills?idMeet=${m.idMeet}&name=${m.name}`}>
+                            <Checkbox
+                                checked={meetSelected[index]}
+                                onCheckedChange={() =>
+                                    changeMainMeetSelected(index)
+                                }></Checkbox>
+                        </TableCell>
+                        <TableCell
+                            className="font-medium"
+                            onClick={() => changeMainMeetSelected(index)}>
+                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
                                 {m.name}
                             </Link>
                         </TableCell>
-                        <TableCell>
-                            <Link
-                                key={m.idMeet}
-                                href={`/settle/bills?idMeet=${m.idMeet}&name=${m.name}`}>
+                        <TableCell
+                            onClick={() => changeMainMeetSelected(index)}>
+                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
                                 {m.details}
                             </Link>
                         </TableCell>
-                        <TableCell>
-                            <Link
-                                key={m.idMeet}
-                                href={`/settle/bills?idMeet=${m.idMeet}&name=${m.name}`}>
+                        <TableCell
+                            onClick={() => changeMainMeetSelected(index)}>
+                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
                                 {m.createdBy.name}
+                            </Link>
+                        </TableCell>
+                        <TableCell
+                            onClick={() => changeMainMeetSelected(index)}>
+                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
+                                {"fecha"}
                             </Link>
                         </TableCell>
                         <TableCell className="text-right">
@@ -63,7 +158,7 @@ export default function ListMeets({
                                 </Link>
                                 <RemoveMeet
                                     idMeet={m.idMeet}
-                                    refresh={refresh}></RemoveMeet>
+                                    refresh={refreshAction}></RemoveMeet>
                             </div>
                         </TableCell>
                     </TableRow>

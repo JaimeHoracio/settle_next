@@ -4,13 +4,14 @@
 **/
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow'
-import { UserLoggedDto } from '../server/types/definitions';
+import { UserLoggedDto } from '@/app/server/types/definitions';
 
-const default_userLogged = {
+const default_userLogged: UserLoggedDto = {
     idUser: "",
     name: "",
     friends: []
 }
+
 
 export interface UserStore {
     label: string
@@ -19,9 +20,10 @@ export interface UserStore {
 
 interface UserLoggedStore {
     userLogged: UserLoggedDto | undefined,
-    friends: Array<UserStore>,
     updateUserLoggedStore: (new_user: UserLoggedDto | undefined) => void,
     resetUserLoggedStore: () => void,
+
+    friends: Array<UserStore>,
     updateFriendsUserStore: (new_friends: Array<UserStore>) => void,
     addFriendToUserStore: (new_friend: UserStore) => void,
     removeFriendToUserStore: (value_old_friend: string) => void,
@@ -29,9 +31,10 @@ interface UserLoggedStore {
 
 export const useUserLoggedStore = create<UserLoggedStore>()((set) => ({
     userLogged: undefined,
-    friends: [],
     updateUserLoggedStore: (new_user: UserLoggedDto | undefined) => set({ userLogged: new_user }),
     resetUserLoggedStore: () => set({ userLogged: default_userLogged }),
+
+    friends: [],
     updateFriendsUserStore: (new_friends: Array<UserStore>) => set({
         friends: new_friends
     }),
