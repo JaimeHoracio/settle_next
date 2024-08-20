@@ -13,16 +13,27 @@ import {
     useUserLoggedStore,
 } from "@/app/store/user-logged";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
+import { isBlank } from "@/app/utils/validationUtils";
+import { useMeetSelectedStore } from "@/app/store/meet-selected";
+import { getCurrencyByCode } from "@/app/utils/currencyUtils";
+import { BillDto, DetailsBillDto } from "@/app/server/types/definitions";
+import { addBillApi } from "@/app/server/apis/bill-api";
 
 export default function AddBill() {
+    // Router
+    const router = useRouter();
+
     const { userLogged } = useUserLoggedStore((state) => state);
     const nameUserLogged = userLogged?.name as string;
+
+    // Meet seleccionado.
+    const { meetSelectedStore } = useMeetSelectedStore((state) => state);
+    const idMeet = meetSelectedStore ? meetSelectedStore.idMeet : undefined;
 
     // Query params
     const searchParams = useSearchParams();
 
     // Const
-    const nameMeet = searchParams.get("name")?.toString();
     // Estos datos existen si se esta haciendo una modificación solamente.
     const defualt_reference = searchParams.get("reference")?.toString();
     const default_amount = searchParams.get("amount")?.toString();
@@ -30,14 +41,17 @@ export default function AddBill() {
     const friends: UserStore[] | undefined = FriendsUserLogged();
 
     const listFriends: Option[] = friends.map((f) => ({
-        label: f.label,
-        value: f.value,
+        value: f.idUserStore,
+        label: f.nameUserStore,
     }));
 
     const ownOpcion: Option[] = [];
-    const ownUser = friends.find((f) => f.label === nameUserLogged);
+    const ownUser = friends.find((f) => f.nameUserStore === nameUserLogged);
     if (ownUser) {
-        ownOpcion.push({ value: ownUser.value, label: ownUser.label });
+        ownOpcion.push({
+            value: ownUser.idUserStore,
+            label: ownUser.nameUserStore,
+        });
     }
 
     // useState
@@ -45,26 +59,85 @@ export default function AddBill() {
     const [usersPaid, setUsersPaid] = useState<Option[]>(ownOpcion);
     const [usersDebt, setUsersDebt] = useState<Option[]>(listFriends);
 
-    // const
-    const router = useRouter();
-
     // useRef
     const reference = useRef<HTMLInputElement>(null);
     const amount = useRef<HTMLInputElement>(null);
+    const [currency, setCurrency] = useState<string>("UYU");
 
     // Methods
-    const addBillMethod = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const getUsersPaid = () => {
+        if (usersPaid && usersPaid.length > 0) {
+            const amountPaidPerUser =
+                Number(amount.current?.value) / usersPaid.length;
+            const listPaid: DetailsBillDto[] = usersPaid.map((p) => ({
+                amount: amountPaidPerUser,
+                user: p.label,
+            }));
+            return listPaid;
+        } else return [];
+    };
+
+    const getUsersDebt = () => {
+        if (usersDebt && usersDebt.length > 0) {
+            const amountDebtPerUser =
+                Number(amount.current?.value) / usersDebt.length;
+            const listDebt: DetailsBillDto[] = usersDebt.map((p) => ({
+                amount: amountDebtPerUser,
+                user: p.label,
+            }));
+            return listDebt;
+        } else return [];
+    };
+
+    const addBillMethod = async (/*e: React.FormEvent*/) => {
+        //e.preventDefault();
         setLoading(true);
 
         //se guarda el gasto
+        if (
+            !isBlank(reference.current?.value) &&
+            !isBlank(amount.current?.value) &&
+            !isBlank(currency) &&
+            usersPaid.length > 0 &&
+            usersDebt.length > 0
+        ) {
+            console.log(">>> idMeet:" + idMeet);
 
-        goBack();
-        setLoading(false);
+            if (isBlank(idMeet)) {
+                console.log(">>> NO deberia ser nulo idMeet:" + idMeet);
+            }
+            const new_bill: BillDto = {
+                idMeet: idMeet as string,
+                createdBy: nameUserLogged,
+                reference: reference.current?.value as string,
+                receipt: {
+                    amount: Number(amount.current?.value),
+                    discount: 0,
+                    currency: getCurrencyByCode(currency),
+                },
+                usersPaid: getUsersPaid(),
+                usersDebt: getUsersDebt(),
+            };
+
+            //Guardo el gasto asociado al encuentro.
+            try {
+                await addBillApi(new_bill);
+                goBack();
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            // Alerta para indicar que son obligatorios los campos
+            console.log(">>> Rellene campos obligatorios.");
+        }
+
+        //setLoading(false);
     };
 
-    const selectCurrencyHandler = (selectedMeet: string) => {
-        console.log("Desde el padre - meet selected: " + selectedMeet);
+    const selectCurrencyHandler = (selectedCurrency: string) => {
+        console.log("Desde el padre - meet selected: " + selectedCurrency);
+        setCurrency(selectedCurrency);
+        console.log(">>> currency: " + currency);
     };
 
     const goBack = () => {
@@ -73,7 +146,7 @@ export default function AddBill() {
 
     return (
         <article>
-            <form onSubmit={addBillMethod}>
+            <form>
                 <Label htmlFor="name">Referencia</Label>
                 <Input
                     type="text"
@@ -94,7 +167,7 @@ export default function AddBill() {
                         defaultValue={default_amount}
                     />
                     <SelectCurrency
-                        defaultValue="UYU"
+                        defaultValue={currency}
                         selectedCurrencyFromChild={
                             selectCurrencyHandler
                         }></SelectCurrency>
@@ -124,7 +197,10 @@ export default function AddBill() {
 
                 <div className="flex flex-row justify-end space-x-4 py-4">
                     <Button onClick={goBack}>Cancelar</Button>
-                    <Button type="submit" disabled={loading}>
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        onClick={addBillMethod}>
                         Agregar Gasto
                     </Button>
                 </div>

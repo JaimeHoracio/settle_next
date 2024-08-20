@@ -24,8 +24,15 @@ export default function ListBills() {
         if (!idMeet) {
             setBills([]);
         } else {
-            const billsFromDB = await listBillsByidMeetApi(idMeet);
-            setBills(billsFromDB ? billsFromDB : []);
+            let billsFromDB: BillDto[];
+            const responseListBills = await listBillsByidMeetApi(idMeet);
+
+            console.log(">>> Lista de bills: " +idMeet, responseListBills)
+
+
+            if (responseListBills) billsFromDB = JSON.parse(responseListBills);
+            else billsFromDB = [];
+            setBills(billsFromDB);
         }
     };
 
@@ -51,10 +58,10 @@ export default function ListBills() {
                         </TableCell>
                         <TableCell>{b.createdBy}</TableCell>
                         <TableCell>
-                            <div className="flex flex-col items-center justify-between">
+                            <div className="flex flex-row items-center justify-start">
                                 {b.receipt.amount}
-                                <div className="text-xs">
-                                    {b.receipt.currency.name}
+                                <div className="text-xs ml-1">
+                                    {b.receipt.currency.code}
                                 </div>
                             </div>
                         </TableCell>

@@ -18,11 +18,12 @@ const DetailsBillSchema = new Schema({
 }, { _id: false })
 
 const billSchema = new Schema({
-    iMeet: String,
+    idMeet: String,
     createdBy: String,
     reference: String,
     receipt: receiptSchema,
-    usersPaid: [DetailsBillSchema]
+    usersPaid: [DetailsBillSchema],
+    usersDebt: [DetailsBillSchema]
 }, {
     timestamps: true
 })

@@ -44,7 +44,9 @@ export default function HomeUsersList() {
         friends: UserStore[],
         labelUser: string
     ) => {
-        return friends.find((f) => f.label === labelUser) ? true : false;
+        return friends.find((f) => f.nameUserStore === labelUser)
+            ? true
+            : false;
     };
 
     const findFriendHandle = async () => {
@@ -61,8 +63,8 @@ export default function HomeUsersList() {
                 await addFriendToUserLoggedApi(nameUserLogged, friendDB);
                 //Actualizo lista de usuarios en el storage.
                 const friendStore: UserStore = {
-                    label: friendDB.name,
-                    value: friendDB.idUser + friendDB.name,
+                    idUserStore: friendDB.idUser + friendDB.name,
+                    nameUserStore: friendDB.name,
                 };
                 addFriendToUserStore(friendStore);
                 setInviteFriend("");
@@ -109,9 +111,9 @@ export default function HomeUsersList() {
                 <TableBody>
                     {friends?.map(
                         (f, indice) =>
-                            f.label !== nameUserLogged && (
+                            f.nameUserStore !== nameUserLogged && (
                                 <TableRow key={indice}>
-                                    <TableCell>{f.label}</TableCell>
+                                    <TableCell>{f.nameUserStore}</TableCell>
                                     <TableCell className={"text-right"}>
                                         <div className="rounded-full flex flex-row justify-end items-center space-x-3">
                                             <RemoveUser

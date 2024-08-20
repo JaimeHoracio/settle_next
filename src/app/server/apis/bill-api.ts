@@ -11,7 +11,9 @@ export async function addBillApi(bill: BillDto) {
         return await BillModel.create(bill);
 
     } catch (error) {
-        console.error(">>> Error addBillApi:" + error)
+        console.error(">>> Error addBillApi:" + error);
+
+        throw new Error("Error, al crear un nuevo pago: " + error);
     } finally {
         await disconnectMongoDB();
     }
@@ -51,7 +53,7 @@ export async function listBillsByidMeetApi(idMeet: string) {
     try {
         await connectMongoDB()
         let list = await BillModel.find({ idMeet }).exec();
-        return list
+        return JSON.stringify(list)
     } catch (error) {
         console.error(">>> Error :" + error)
     } finally {

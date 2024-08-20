@@ -12,10 +12,9 @@ const default_userLogged: UserLoggedDto = {
     friends: []
 }
 
-
 export interface UserStore {
-    label: string
-    value: string
+    idUserStore: string
+    nameUserStore: string
 }
 
 interface UserLoggedStore {
@@ -41,8 +40,8 @@ export const useUserLoggedStore = create<UserLoggedStore>()((set) => ({
     addFriendToUserStore: (new_friend: UserStore) => set((state) => ({
         friends: [...state.friends, new_friend]
     })),
-    removeFriendToUserStore: (value_old_friend: string) => set((state) => ({
-        friends: state.friends.filter(f => f.value !== value_old_friend)
+    removeFriendToUserStore: (idUser_old_friend: string) => set((state) => ({
+        friends: state.friends.filter(f => f.idUserStore !== idUser_old_friend)
     })),
 }));
 

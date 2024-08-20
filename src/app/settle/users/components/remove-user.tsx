@@ -30,10 +30,10 @@ export default function RemoveUser({
     // Maneja el clic del botón
     const handleButtonClick = async () => {
         await removeFriendToUserLoggedApi(nameUserLogged, {
-            idUser: oldFriend.value,
-            name: oldFriend.label,
+            idUser: oldFriend.idUserStore,
+            name: oldFriend.nameUserStore,
         });
-        removeFriendToUserStore(oldFriend.value);
+        removeFriendToUserStore(oldFriend.idUserStore);
         setIsOpen(false); // Cierra el diálogo
         goToPath(HOME_USERS_URL);
     };

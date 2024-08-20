@@ -35,13 +35,15 @@ export default function FormLogin() {
 
             if (userFromServer) {
                 //Busco los amigos para crear encuentros y dividir gastos.
-                const usersStore = userFromServer.friends.map((u) => ({
-                    value: u.idUser,
-                    label: u.name,
-                }));
+                const usersStore: UserStore[] = userFromServer.friends.map(
+                    (u) => ({
+                        idUserStore: u.idUser,
+                        nameUserStore: u.name,
+                    })
+                );
                 const ownUser: UserStore = {
-                    label: userFromServer.name,
-                    value: userFromServer.idUser,
+                    idUserStore: userFromServer.idUser,
+                    nameUserStore: userFromServer.name,
                 };
 
                 console.log(">>> Usuario logueado: " + JSON.stringify(ownUser));
