@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useUserLoggedStore } from "@/app/store/user-logged";
+import { UserLogged } from "@/app/store/user-logged-store";
 import { useRef } from "react";
 import { ROOT_SETTLE_URL } from "@/app/settle/components/constants";
 
@@ -25,7 +25,8 @@ const links = [
 export default function NavLinks() {
     const router = useRouter();
 
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
     const isUserLogged = useRef(false);

@@ -4,7 +4,7 @@
 **/
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow'
-import { UserLoggedDto } from '@/app/server/types/definitions';
+import { UserLoggedDto } from '@/app/server/types/users-type';
 
 const default_userLogged: UserLoggedDto = {
     idUser: "",

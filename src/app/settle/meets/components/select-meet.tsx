@@ -1,6 +1,6 @@
 "use client";
 
-import { MeetSelectDto } from "@/app/server/types/definitions";
+import { MeetSelectedDto } from "@/app/server/types/meets-type";
 import {
     Select,
     SelectContent,
@@ -11,11 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-export default function SelectMeet({
-    defaultValue,
-}: {
-    defaultValue: string;
-}) {
+export default function SelectMeet({ defaultValue }: { defaultValue: string }) {
     let defaultMeet = defaultValue;
 
     const selectMeetHandler = (selected: string) => {
@@ -23,7 +19,7 @@ export default function SelectMeet({
         //setSelectMeedChild(selected);
     };
 
-    let meets: MeetSelectDto[] = [];
+    let meets: MeetSelectedDto[] = [];
 
     if ((!defaultValue || defaultValue === "") && meets.length > 0) {
         defaultMeet = meets[0].idMeet;
@@ -38,8 +34,8 @@ export default function SelectMeet({
                 <SelectGroup>
                     <SelectLabel>Encuentros</SelectLabel>
                     {meets.map((m) => (
-                        <SelectItem key={m.idMeet} value={m.name}>
-                            {m.name}
+                        <SelectItem key={m.idMeet} value={m.nameMeet}>
+                            {m.nameMeet}
                         </SelectItem>
                     ))}
                 </SelectGroup>
@@ -47,4 +43,3 @@ export default function SelectMeet({
         </Select>
     );
 }
-

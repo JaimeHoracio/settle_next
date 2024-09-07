@@ -12,9 +12,10 @@ import {
 import { Label } from "@/components/ui/label";
 import {
     FriendsUserLogged,
+    UserLogged,
     UserStore,
     useUserLoggedStore,
-} from "@/app/store/user-logged";
+} from "@/app/store/user-logged-store";
 import { Input } from "@/components/ui/input";
 import { UserPlusIcon } from "@heroicons/react/24/outline";
 import {
@@ -23,13 +24,14 @@ import {
 } from "@/app/server/apis/user-api";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { UserDto } from "@/app/server/types/definitions";
 import RemoveUser from "@/app/settle/users/components/remove-user";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
+import { UserDto } from "@/app/server/types/users-type";
 
 export default function HomeUsersList() {
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();;
     const nameUserLogged = userLogged?.name as string;
 
     const addFriendToUserStore = useUserLoggedStore(

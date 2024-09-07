@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import React from "react";
-import { useUserLoggedStore } from "@/app/store/user-logged";
+import { UserLogged } from "@/app/store/user-logged-store";
 
 export default function HeadSettle() {
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();
 
     return (
         <header className="bg-amber-700 w-full px-6 shadow rounded">

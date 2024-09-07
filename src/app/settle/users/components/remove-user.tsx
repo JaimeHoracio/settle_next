@@ -12,7 +12,7 @@ import {
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { goToPath } from "@/app/utils/go-to-path";
-import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
+import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import { HOME_USERS_URL } from "@/app/settle/components/constants";
 
 export default function RemoveUser({

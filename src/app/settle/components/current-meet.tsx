@@ -1,13 +1,14 @@
 "use client";
 
-import { useMeetSelectedStore } from "@/app/store/meet-selected";
+import { MeetSelected, useMeetSelectedStore } from "@/app/store/meet-selected-store";
 import { HomeIcon } from "@radix-ui/react-icons";
 import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
 export default function CurrentMeet() {
-    const { meetSelectedStore } = useMeetSelectedStore((state) => state);
+    //const { meetSelectedStore } = useMeetSelectedStore((state) => state);
+    const meetSelectedStore = MeetSelected()
     // Const
     const nameMeet = meetSelectedStore ? meetSelectedStore.nameMeet : "";
 

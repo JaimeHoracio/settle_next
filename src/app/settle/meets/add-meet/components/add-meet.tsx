@@ -9,13 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { createMeetApi, updateMeetApi } from "@/app/server/apis/meets-api";
-import { MeetDto, UserDto } from "@/app/server/types/definitions";
 import { goToPath } from "@/app/utils/go-to-path";
-import { useUserLoggedStore } from "@/app/store/user-logged";
+import { UserLogged } from "@/app/store/user-logged-store";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
+import { UserDto } from "@/app/server/types/users-type";
+import { MeetDto } from "@/app/server/types/meets-type";
+import { v4 as uuidv4 } from "uuid";
 
 export default function AddMeet() {
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
     // Query params
@@ -54,14 +57,16 @@ export default function AddMeet() {
                         primary: primary ? true : false,
                     });
                 } else {
+                    let uuidMeet = uuidv4();
                     const meetdto: MeetDto = {
-                        idMeet: new Date().toISOString(),
+                        idMeet: uuidMeet,
                         createdBy: user,
                         name: name.current?.value,
                         details: details.current?.value,
                         active: true,
                     };
-                    await createMeetApi(meetdto);
+                    const meet_created = await createMeetApi(meetdto);
+                    console.info(">>> Meet creado: " + meet_created);
                 }
 
                 //Vuelvo al home de Settle

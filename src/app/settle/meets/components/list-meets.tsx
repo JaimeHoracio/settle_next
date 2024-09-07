@@ -12,20 +12,26 @@ import {
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import { MeetDto } from "@/app/server/types/definitions";
 import RemoveMeet from "@/app/settle/meets/components/remove-meet";
 
 import { listMeetsActiveByUserNameApi } from "@/app/server/apis/meets-api";
-import { useUserLoggedStore } from "@/app/store/user-logged";
-import { useMeetSelectedStore } from "@/app/store/meet-selected";
+import { UserLogged } from "@/app/store/user-logged-store";
+import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
+
+// import { useListBillsMeetSelectedStore } from "@/app/store/list-bills-store";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
+import { MeetDto } from "@/app/server/types/meets-type";
 
 export default function ListMeets() {
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     const { updateMeetSelectedStore } = useMeetSelectedStore((state) => state);
+    // const { createBillsMeetStore } = useListBillsMeetSelectedStore(
+    //     (state) => state
+    // );
 
     const [meets, setMeets] = useState<MeetDto[]>([]);
 
@@ -64,6 +70,8 @@ export default function ListMeets() {
             nameMeet: meetsList[index].name,
         };
         updateMeetSelectedStore(meet_selected);
+        // Creo lista de bills para persistir ligada al encuentro.
+        // createBillsMeetStore(meet_selected.nameMeet);
     };
 
     const changeMainMeetSelected = (index: number) => {

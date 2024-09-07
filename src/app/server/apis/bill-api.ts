@@ -2,13 +2,17 @@
 
 import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
 import BillModel from "@/app/server/mongo-db/models/bill.model";
-import { BillDto } from "@/app/server/types/definitions";
+import { BillDto } from "../types/bills-type";
 
 
 export async function addBillApi(bill: BillDto) {
     try {
         await connectMongoDB()
-        return await BillModel.create(bill);
+        const new_bill = await BillModel.create(bill);
+
+        //console.log(">>> Nuevo pago: " + new_bill)
+
+        return JSON.stringify(new_bill);
 
     } catch (error) {
         console.error(">>> Error addBillApi:" + error);

@@ -8,9 +8,9 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getUserLoggedApi } from "@/app/server/apis/user-api";
-import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
-import { UserLoggedDto } from "../server/types/definitions";
+import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
+import { UserLoggedDto } from "@/app/server/types/users-type";
 
 export default function FormLogin() {
     const { updateUserLoggedStore, updateFriendsUserStore } =
@@ -59,6 +59,8 @@ export default function FormLogin() {
                 goHomeMeets();
 
                 // ACA SE PODRIA AGREGAR LA LOGICA QUE SI HAY SOLO UN ENCUENTRO VAYA DIRECTO A LOS GASTOS.
+
+                
             } else {
                 setError("Nombre o contraseña incorrectos");
                 setLoading(false);

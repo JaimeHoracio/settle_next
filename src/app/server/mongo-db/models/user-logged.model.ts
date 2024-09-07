@@ -8,5 +8,5 @@ export const UserLoggedSchema = new Schema({
     friends: [UserSchema]
 })
 
-const UserLoggedModel = mongoose.models.UsersLogin || mongoose.model("UsersLogin", UserLoggedSchema);
+const UserLoggedModel = mongoose.models.UserLogged || mongoose.model("UserLogged", UserLoggedSchema);
 export default UserLoggedModel;

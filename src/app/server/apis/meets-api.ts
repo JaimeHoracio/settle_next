@@ -1,15 +1,15 @@
 'use server'
 
 import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
-import { MeetDto, MeetSelectDto } from "@/app/server/types/definitions";
 import MeetModel from "@/app/server/mongo-db/models/meet.model";
+import { MeetDto, MeetSelectedDto } from "../types/meets-type";
 
 
 export async function createMeetApi(meet: MeetDto) {
     try {
         await connectMongoDB()
-        await MeetModel.create({ idMeet: meet.idMeet, createdBy: meet.createdBy, name: meet.name, details: meet.details, active: true });
-
+        const new_meet = await MeetModel.create({ idMeet: meet.idMeet, createdBy: meet.createdBy, name: meet.name, details: meet.details, active: true });
+        return JSON.stringify(new_meet)
     } catch (error) {
         console.error(">>> Error createMeetApi: " + error)
     } finally {
@@ -96,9 +96,9 @@ export async function listMeetsActiveByUserNameForSelectApi(nameUser: string) {
         if (!list) {
             return []
         }
-        const result: MeetSelectDto[] = []
+        const result: MeetSelectedDto[] = []
         list.map((m) => {
-            result.push({ idMeet: m.idMeet, name: m.name, primary: m.primary ? false : m.primary as boolean })
+            result.push({ idMeet: m.idMeet, nameMeet: m.name, primary: m.primary ? false : m.primary as boolean })
         })
         return result
     } catch (error) {

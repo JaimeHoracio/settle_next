@@ -4,7 +4,7 @@
 **/
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow'
-import { MeetSelectedDto } from '@/app/server/types/definitions';
+import { MeetSelectedDto } from '@/app/server/types/meets-type';
 
 const default_meetSelectedStore: MeetSelectedDto = {
     idMeet: "",
@@ -23,6 +23,7 @@ export const useMeetSelectedStore = create<MeetSelectedStore>()((set) => ({
     resetMeetSelectedStore: () => set({ meetSelectedStore: default_meetSelectedStore })
 }));
 
+// Usar useShallow previene la repeticion de renderizado 
 export const MeetSelected = () => {
     const { meetSelectedStore } = useMeetSelectedStore(useShallow((state) => ({ meetSelectedStore: state.meetSelectedStore })))
     return meetSelectedStore;

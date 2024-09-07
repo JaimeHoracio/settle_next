@@ -9,26 +9,33 @@ import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import SelectCurrency from "@/app/settle/currency/select-currency";
 import {
     FriendsUserLogged,
+    UserLogged,
     UserStore,
-    useUserLoggedStore,
-} from "@/app/store/user-logged";
+} from "@/app/store/user-logged-store";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
-import { isBlank } from "@/app/utils/validationUtils";
-import { useMeetSelectedStore } from "@/app/store/meet-selected";
-import { getCurrencyByCode } from "@/app/utils/currencyUtils";
-import { BillDto, DetailsBillDto } from "@/app/server/types/definitions";
+import { isBlank } from "@/app/utils/validation-utils";
+import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
+import { getCurrencyByCode } from "@/app/utils/currency-utils";
 import { addBillApi } from "@/app/server/apis/bill-api";
+import { BillDto, DetailsBillDto } from "@/app/server/types/bills-type";
+// import { useListBillsMeetSelectedStore } from "@/app/store/list-bills-store";
 
 export default function AddBill() {
     // Router
     const router = useRouter();
 
-    const { userLogged } = useUserLoggedStore((state) => state);
+    //const { userLogged } = useUserLoggedStore((state) => state);
+    const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
+
+    // const { addBillToListStore } = useListBillsMeetSelectedStore(
+    //     (state) => state
+    // );
 
     // Meet seleccionado.
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     const idMeet = meetSelectedStore ? meetSelectedStore.idMeet : undefined;
+    const nameMeet = meetSelectedStore ? meetSelectedStore.nameMeet : "";
 
     // Query params
     const searchParams = useSearchParams();
@@ -89,8 +96,11 @@ export default function AddBill() {
         } else return [];
     };
 
-    const addBillMethod = async (/*e: React.FormEvent*/) => {
-        //e.preventDefault();
+    const addBillMethod = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        console.log(">>> Entrando a agregar bill..");
+
         setLoading(true);
 
         //se guarda el gasto
@@ -121,7 +131,17 @@ export default function AddBill() {
 
             //Guardo el gasto asociado al encuentro.
             try {
-                await addBillApi(new_bill);
+                const new_bill__from_db = await addBillApi(new_bill);
+                if (!new_bill__from_db || !nameMeet) {
+                    console.error(
+                        ">>> Error, respuesta al agregar un pago: " +
+                            new_bill__from_db
+                    );
+                }
+                // else {
+                //     Guardo el nuevo pago en storage
+                //     addBillToListStore(nameMeet, new_bill);
+                // }
                 goBack();
             } catch (error) {
                 console.error(error);
@@ -146,7 +166,7 @@ export default function AddBill() {
 
     return (
         <article>
-            <form>
+            <form onSubmit={addBillMethod}>
                 <Label htmlFor="name">Referencia</Label>
                 <Input
                     type="text"
@@ -200,7 +220,8 @@ export default function AddBill() {
                     <Button
                         type="submit"
                         disabled={loading}
-                        onClick={addBillMethod}>
+                        //onClick={addBillMethod}
+                    >
                         Agregar Gasto
                     </Button>
                 </div>

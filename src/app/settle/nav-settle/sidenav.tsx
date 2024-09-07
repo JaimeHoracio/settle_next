@@ -3,7 +3,7 @@
 import Link from "next/link";
 import NavLinks from "./nav-links";
 import { PowerIcon } from "@heroicons/react/24/outline";
-import { useUserLoggedStore } from "@/app/store/user-logged";
+import { useUserLoggedStore } from "@/app/store/user-logged-store";
 import router from "next/router";
 
 export default function SideNav() {

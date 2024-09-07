@@ -1,8 +1,8 @@
 'use server'
 
 import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
-import UserLoggedModel from "@/app/server/mongo-db/models/user-login.model";
-import { UserDto } from "@/app/server/types/definitions";
+import UserLoggedModel from "@/app/server/mongo-db/models/user-logged.model";
+import { UserDto } from "@/app/server/types//users-type";
 
 // const userList = users.map(user => ({
 //     id: user.id,
@@ -60,7 +60,7 @@ export async function registerUserLoggedApi(name: string, pass: string) {
         await connectMongoDB()
         const user = await UserLoggedModel.create({ name, password: pass, createdAt: new Date().toISOString(), friends: [] });
         return {
-            idUser: user._id,
+            idUser: user._id.toString(),
             name: user.name,
             createdAt: user.createdAt,
             friends: []
@@ -95,7 +95,6 @@ export async function findFriendsByNameApi(name: string) {
     }
 }
 
-
 export async function addFriendToUserLoggedApi(nameParent: string, newFriend: UserDto) {
     try {
         await connectMongoDB()
@@ -105,8 +104,8 @@ export async function addFriendToUserLoggedApi(nameParent: string, newFriend: Us
             _id: newFriend.idUser,
             name: newFriend.name
         }
-        await UserLoggedModel.updateOne(query, { $push: { friends: new_friends_db } });
-
+        const friend = await UserLoggedModel.updateOne(query, { $push: { friends: new_friends_db } });
+        return JSON.stringify(friend)
     } catch (error) {
         console.error(">>> Error createMeetApi: " + error)
     } finally {
@@ -141,8 +140,8 @@ export async function updateFriendByNameParentApi(nameParent: string, newFriends
             _id: f.idUser,
             name: f.name
         }))
-        await UserLoggedModel.findOneAndUpdate(query, { friends: new_friends_db });
-
+        const friend = await UserLoggedModel.findOneAndUpdate(query, { friends: new_friends_db });
+        return JSON.stringify(friend)
     } catch (error) {
         console.error(">>> Error createMeetApi: " + error)
     } finally {

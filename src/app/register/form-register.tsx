@@ -12,10 +12,10 @@ import {
     existUserLoggedByNameApi,
     registerUserLoggedApi,
 } from "@/app/server/apis/user-api";
-import { UserStore, useUserLoggedStore } from "@/app/store/user-logged";
-import { UserLoggedDto } from "@/app/server/types/definitions";
+import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import Link from "next/link";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
+import { UserLoggedDto } from "@/app/server/types/users-type";
 
 export default function FormRegister() {
     const router = useRouter();
@@ -26,12 +26,18 @@ export default function FormRegister() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [registered, setRegistered] = useState(false);
+    const [blockRegister, setBlockRegister] = useState(true);
 
     const registerUserHandler = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (registered) {
-            if (!password) {
+        console.log(">>> registrar action");
+
+        if (!blockRegister) {
+            console.log(">>> entro a registrar action");
+            if (!name) {
+                setError("El Nombre es obligatorio.");
+            } else if (!password) {
                 setError("La Contraseña es obligatoria.");
             } else {
                 if (password === confirmPassword) {
@@ -42,16 +48,23 @@ export default function FormRegister() {
                                 password.trim().toLowerCase()
                             );
 
+                        console.log(
+                            ">>> New_user: " + JSON.stringify(new_user)
+                        );
+
                         if (new_user) {
                             //Guardo en el estado el usuario logueado.
                             updateUserLoggedStore(new_user);
 
                             // Se agrega a si mismo a la lista de amigos.
-                            const ownUser: UserStore = {
+                            const userRegistered: UserStore = {
                                 idUserStore: new_user.idUser,
                                 nameUserStore: new_user.name,
                             };
-                            updateFriendsUserStore([ownUser]);
+                            // Agrego al mismo usuario en la lista de amigos para dividir los gastos.
+                            updateFriendsUserStore([userRegistered]);
+                            //Guardo en el storage el usuario logueado.
+                            updateUserLoggedStore(new_user);
 
                             router.push(HOME_MEETS_URL);
                         } else {
@@ -69,26 +82,25 @@ export default function FormRegister() {
                 }
             }
         }
+    };
 
-        if (!name) {
-            setError("El Nombre es obligatorio.");
+    const handleOnBlurName = async (new_name: string) => {
+        const userFromServer: boolean = (await existUserLoggedByNameApi(
+            new_name.trim().toLowerCase()
+        )) as boolean;
+
+        if (userFromServer) {
+            setError("Ya existe un usuario con este nombre.");
+            setRegistered(true);
         } else {
-            const userFromServer: boolean = (await existUserLoggedByNameApi(
-                name.trim().toLowerCase()
-            )) as boolean;
-
-            if (userFromServer) {
-                setError("Ya existe un usuario con este nombre.");
-            } else {
-                setRegistered(true);
-            }
+            setRegistered(false);
+            setError("");
         }
     };
 
-    const handleInputName = (n: string) => {
-        setName(n);
+    const handleInputName = (new_name: string) => {
+        setName(new_name);
         setError("");
-        setRegistered(false);
     };
 
     const handleInputPass = (p: string) => {
@@ -96,9 +108,14 @@ export default function FormRegister() {
         setError("");
     };
 
-    const handleInputConfirmPass = (p: string) => {
-        setConfirmPassword(p);
-        setError("");
+    const handleInputConfirmPass = (new_confirmPassword: string) => {
+        setConfirmPassword(new_confirmPassword);
+        if (password && password === new_confirmPassword) {
+            setBlockRegister(false);
+            setError("");
+        } else {
+            setBlockRegister(true);
+        }
     };
 
     return (
@@ -111,7 +128,7 @@ export default function FormRegister() {
                     </Link>
                 </div>
                 <form
-                    onSubmit={registerUserHandler}
+                    onSubmit={(e) => registerUserHandler(e)}
                     className="space-y-12 w-full sm:w-[400px]">
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="name">Nombre</Label>
@@ -121,6 +138,7 @@ export default function FormRegister() {
                             value={name}
                             placeholder="Nombre"
                             onChange={(e) => handleInputName(e.target.value)}
+                            onBlur={(e) => handleOnBlurName(e.target.value)}
                             id="name"
                             type="text"
                         />
@@ -135,6 +153,7 @@ export default function FormRegister() {
                             onChange={(e) => handleInputPass(e.target.value)}
                             id="password"
                             type="password"
+                            disabled={registered}
                         />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
@@ -149,12 +168,15 @@ export default function FormRegister() {
                             }
                             id="confirmPassword"
                             type="password"
-                            disabled={!registered}
+                            disabled={registered}
                         />
                     </div>
-                    {error && <Alert>{error}</Alert>}
+                    {error && <Alert className="text-red-600">{error}</Alert>}
                     <div className="w-full">
-                        <Button className="w-full" size="lg">
+                        <Button
+                            className="w-full"
+                            size="lg"
+                            disabled={blockRegister}>
                             Registrar
                         </Button>
                     </div>

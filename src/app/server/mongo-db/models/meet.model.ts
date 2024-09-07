@@ -14,6 +14,6 @@ const meetSchema = new Schema({
     timestamps: true
 })
 
-const Meets = mongoose.models.Meets || mongoose.model("Meets", meetSchema)
-export default Meets
+const MeetsModel = mongoose.models.Meets || mongoose.model("Meets", meetSchema)
+export default MeetsModel
 
