@@ -6,63 +6,6 @@ import ListUsersDebt from "./list-users-debt";
 import { BillDto } from "@/app/server/types/bills-type";
 import { Expenses, RowExpense } from "@/app/server/types/resume-bills-type";
 
-const resume_expenses: Expenses[] = [
-    {
-        currency: "$",
-        list_expenses: [
-            {
-                nameDebt: "horacio",
-                currency: "$",
-                totalAmount: 200.0,
-                namePaid: "maria",
-            },
-            {
-                nameDebt: "jorge",
-                currency: "$",
-                totalAmount: 250.0,
-                namePaid: "maria",
-            },
-            {
-                nameDebt: "jaime",
-                currency: "$",
-                totalAmount: 100.0,
-                namePaid: "maria",
-            },
-        ],
-    },
-    /*
-    {
-        currency: "u$s",
-        list_expenses: [
-            {
-                nameDebt: "horacio",
-                currency: "u$s",
-                totalAmount: 100.0,
-                namePaid: "maria",
-            },
-            {
-                nameDebt: "jorge",
-                currency: "u$s",
-                totalAmount: 250.0,
-                namePaid: "maria",
-            },
-            {
-                nameDebt: "maria",
-                currency: "u$s",
-                totalAmount: 300.0,
-                namePaid: "jaime",
-            },
-            {
-                nameDebt: "jorge",
-                currency: "u$s",
-                totalAmount: 300.0,
-                namePaid: "jaime",
-            },
-        ],
-    },
-    */
-];
-
 export default function ResumeBills({ listaBills }: { listaBills: BillDto[] }) {
     const [expenses, setExpenses] = useState<Expenses[]>([]);
 
@@ -107,9 +50,6 @@ export default function ResumeBills({ listaBills }: { listaBills: BillDto[] }) {
                         }
                     }
                 });
-
-                console.log(">>> list debts: " + JSON.stringify(listDebts));
-
                 map_user_paid.set(p.user, listDebts);
             });
             // Guardo para cada currency la lista de deudores para cada pagador
@@ -142,9 +82,6 @@ export default function ResumeBills({ listaBills }: { listaBills: BillDto[] }) {
             };
             result.push(row);
         });
-
-        console.log(">>> result: " + JSON.stringify(result));
-
         return result;
     };
 

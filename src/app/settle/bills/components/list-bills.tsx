@@ -28,8 +28,6 @@ export default function ListBills() {
             let billsFromDB: BillDto[];
             const responseListBills = await listBillsByidMeetApi(idMeet);
 
-            // console.log(">>> Lista de bills: " +idMeet, responseListBills)
-
             if (responseListBills) billsFromDB = JSON.parse(responseListBills);
             else billsFromDB = [];
             setBills(billsFromDB);

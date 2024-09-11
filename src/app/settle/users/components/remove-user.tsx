@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -45,9 +46,10 @@ export default function RemoveUser({
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>
-                        Se aliminará el usuario de forma permanente
-                    </DialogTitle>
+                    <DialogTitle>Eliminar usuario</DialogTitle>
+                    <DialogDescription>
+                        Se aliminará el usuario de forma permanente.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-row justify-center space-x-4 py-4">
                     <Button onClick={() => setIsOpen(false)}>Cancelar</Button>

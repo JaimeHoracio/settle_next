@@ -9,9 +9,6 @@ export async function addBillApi(bill: BillDto) {
     try {
         await connectMongoDB()
         const new_bill = await BillModel.create(bill);
-
-        //console.log(">>> Nuevo pago: " + new_bill)
-
         return JSON.stringify(new_bill);
 
     } catch (error) {

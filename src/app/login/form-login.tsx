@@ -11,6 +11,8 @@ import { getUserLoggedApi } from "@/app/server/apis/user-api";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserLoggedDto } from "@/app/server/types/users-type";
+import { LowerStr } from "@/app/utils/strings-utils";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function FormLogin() {
     const { updateUserLoggedStore, updateFriendsUserStore } =
@@ -28,10 +30,7 @@ export default function FormLogin() {
         setLoading(true);
         try {
             const userFromServer: UserLoggedDto | undefined =
-                await getUserLoggedApi(
-                    name.trim().toLowerCase(),
-                    password.trim().toLowerCase()
-                );
+                await getUserLoggedApi(LowerStr(name), password);
 
             if (userFromServer) {
                 //Busco los amigos para crear encuentros y dividir gastos.
@@ -45,9 +44,6 @@ export default function FormLogin() {
                     idUserStore: userFromServer.idUser,
                     nameUserStore: userFromServer.name,
                 };
-
-                console.log(">>> Usuario logueado: " + JSON.stringify(ownUser));
-
                 // Se agrega a si mismo a la lista de amigos.
                 usersStore.push(ownUser);
                 //Actualiza lista de amigos para repartir gastos.
@@ -59,8 +55,6 @@ export default function FormLogin() {
                 goHomeMeets();
 
                 // ACA SE PODRIA AGREGAR LA LOGICA QUE SI HAY SOLO UN ENCUENTRO VAYA DIRECTO A LOS GASTOS.
-
-                
             } else {
                 setError("Nombre o contraseña incorrectos");
                 setLoading(false);
@@ -115,8 +109,12 @@ export default function FormLogin() {
             </div>
             {error && <Alert className="bg-red-700">{error}</Alert>}
             <div className="w-full">
-                {loading && <div className="text-center mb-2">Loading ...</div>}
-                <Button className="w-full" size="lg" disabled={loading}>
+                {loading && (
+                    <div className="text-center">
+                        <Spinner size="small" />
+                    </div>
+                )}
+                <Button className="w-full mt-6" size="lg" disabled={loading}>
                     Login
                 </Button>
             </div>

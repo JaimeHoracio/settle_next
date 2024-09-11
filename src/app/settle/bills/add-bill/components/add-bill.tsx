@@ -98,9 +98,6 @@ export default function AddBill() {
 
     const addBillMethod = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        console.log(">>> Entrando a agregar bill..");
-
         setLoading(true);
 
         //se guarda el gasto
@@ -111,8 +108,6 @@ export default function AddBill() {
             usersPaid.length > 0 &&
             usersDebt.length > 0
         ) {
-            console.log(">>> idMeet:" + idMeet);
-
             if (isBlank(idMeet)) {
                 console.log(">>> NO deberia ser nulo idMeet:" + idMeet);
             }
@@ -155,9 +150,7 @@ export default function AddBill() {
     };
 
     const selectCurrencyHandler = (selectedCurrency: string) => {
-        console.log("Desde el padre - meet selected: " + selectedCurrency);
         setCurrency(selectedCurrency);
-        console.log(">>> currency: " + currency);
     };
 
     const goBack = () => {

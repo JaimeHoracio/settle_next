@@ -51,9 +51,6 @@ export const ListBillsStore = (meetName: string) => {
 function doCreateListBillStore(name_meet: string, state: ListBillsMeetSelectedStore) {
     let listBills = state.listBillsStore.filter((m) => m.name_meet === name_meet)
 
-    console.log(">>>> doUpdateListBills antes ..... " + name_meet, JSON.stringify(state.listBillsStore))
-
-
     if (!listBills || listBills.length === 0) {
         const new_list_bill = {
             name_meet: name_meet,
@@ -62,13 +59,8 @@ function doCreateListBillStore(name_meet: string, state: ListBillsMeetSelectedSt
         }
         listBills = [new_list_bill]
 
-        console.log(">>>> doUpdateListBills " + JSON.stringify(listBills))
-
         return { listBillsStore: listBills };
     } else {
-
-        console.log(">>>> doUpdateListBills ya existia.")
-
         return { listBillsStore: state.listBillsStore };
     }
 }
@@ -79,8 +71,6 @@ function doUpdateListBills(name_meet: string, new_list_bills_store: BillDto[], s
     if (listBills && listBills.length === 1) {
         listBills[0].bills = new_list_bills_store
     }
-
-    console.log(">>>> doUpdateListBills " + JSON.stringify(listBills))
 
     return { listBillsStore: listBills };
 }
@@ -93,8 +83,6 @@ function doAddBillToListBills(name_meet: string, new_bill_store: BillDto, state:
         listBills[0].bills.push(new_bill_store)
     }
 
-    console.log(">>>> doAddBillToListBills " + JSON.stringify(listBills))
-
     return { listBillsStore: listBills };
 }
 
@@ -104,8 +92,6 @@ function doResetListBills(name_meet: string, state: ListBillsMeetSelectedStore) 
     if (listBills && listBills.length === 1) {
         listBills[0].bills = []
     }
-
-    console.log(">>>> doResetListBills " + JSON.stringify(listBills))
 
     return { listBillsStore: listBills };
 }

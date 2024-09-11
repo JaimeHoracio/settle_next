@@ -35,7 +35,7 @@ export default function ListUsersDebt({
     }, []);
 
     return (
-        <Card className="w-auto border-0 m-0">
+        <Card className="w-auto mb-1">
             <CardContent>
                 <Table className="text-xs border-0 m-0">
                     <TableHeader>

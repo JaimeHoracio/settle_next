@@ -16,6 +16,8 @@ import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import Link from "next/link";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserLoggedDto } from "@/app/server/types/users-type";
+import { LowerStr } from "@/app/utils/strings-utils";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function FormRegister() {
     const router = useRouter();
@@ -28,13 +30,13 @@ export default function FormRegister() {
     const [registered, setRegistered] = useState(false);
     const [blockRegister, setBlockRegister] = useState(true);
 
+    const [loading, setLoading] = useState(false);
+
     const registerUserHandler = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log(">>> registrar action");
-
+        setLoading(true);
         if (!blockRegister) {
-            console.log(">>> entro a registrar action");
             if (!name) {
                 setError("El Nombre es obligatorio.");
             } else if (!password) {
@@ -44,14 +46,9 @@ export default function FormRegister() {
                     try {
                         const new_user: UserLoggedDto | undefined =
                             await registerUserLoggedApi(
-                                name.trim().toLowerCase(),
-                                password.trim().toLowerCase()
+                                LowerStr(name),
+                                password
                             );
-
-                        console.log(
-                            ">>> New_user: " + JSON.stringify(new_user)
-                        );
-
                         if (new_user) {
                             //Guardo en el estado el usuario logueado.
                             updateUserLoggedStore(new_user);
@@ -82,6 +79,7 @@ export default function FormRegister() {
                 }
             }
         }
+        setLoading(false);
     };
 
     const handleOnBlurName = async (new_name: string) => {
@@ -101,6 +99,7 @@ export default function FormRegister() {
     const handleInputName = (new_name: string) => {
         setName(new_name);
         setError("");
+        setRegistered(false);
     };
 
     const handleInputPass = (p: string) => {
@@ -173,6 +172,11 @@ export default function FormRegister() {
                     </div>
                     {error && <Alert className="text-red-600">{error}</Alert>}
                     <div className="w-full">
+                        {loading && (
+                            <div className="text-center">
+                                <Spinner size="small" />
+                            </div>
+                        )}
                         <Button
                             className="w-full"
                             size="lg"

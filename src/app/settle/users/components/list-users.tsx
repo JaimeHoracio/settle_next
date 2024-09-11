@@ -28,10 +28,13 @@ import RemoveUser from "@/app/settle/users/components/remove-user";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { UserDto } from "@/app/server/types/users-type";
+import { LowerStr } from "@/app/utils/strings-utils";
+import { Spinner } from "@/components/ui/spinner";
+import { useToast } from "@/hooks/use-toast";
 
 export default function HomeUsersList() {
-    //const { userLogged } = useUserLoggedStore((state) => state);
-    const userLogged = UserLogged();;
+    const { toast } = useToast();
+    const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
     const addFriendToUserStore = useUserLoggedStore(
@@ -40,6 +43,7 @@ export default function HomeUsersList() {
 
     // Const
     const [inviteFriend, setInviteFriend] = useState("");
+    const [loading, setLoading] = useState(false);
     const friends: UserStore[] | undefined = FriendsUserLogged();
 
     const isFriendContainedInList = (
@@ -52,15 +56,19 @@ export default function HomeUsersList() {
     };
 
     const findFriendHandle = async () => {
+        setLoading(true);
         if (!inviteFriend) {
             console.warn(">>> Debe escribir nombre del usuario");
-        } else if (inviteFriend === nameUserLogged) {
+            showToast("Warning", "Debe escribir nombre del usuario.");
+        } else if (LowerStr(inviteFriend) === LowerStr(nameUserLogged)) {
             console.warn(">>> No puede invitarse a si mismo");
         } else if (isFriendContainedInList(friends, inviteFriend)) {
-            console.warn(">>> El usuario ya fue invitado");
+            console.warn(">>> El usuario ya esta agregado");
+            showToast("Warning", "El usuario ya esta agregado.");
         } else {
-            const friendDB: UserDto | undefined =
-                await findFriendsByNameApi(inviteFriend);
+            const friendDB: UserDto | undefined = await findFriendsByNameApi(
+                LowerStr(inviteFriend)
+            );
             if (friendDB) {
                 await addFriendToUserLoggedApi(nameUserLogged, friendDB);
                 //Actualizo lista de usuarios en el storage.
@@ -74,8 +82,18 @@ export default function HomeUsersList() {
                 console.warn(
                     ">>> Usuario no se puede agregar, verifique su nombre."
                 );
+                showToast("Warning", "El usuario no se encontró, verifique.");
             }
         }
+        setLoading(false);
+    };
+
+    const showToast = (title: string, description: string) => {
+        toast({
+            title: title,
+            description: description,
+            duration: 1500,
+        });
     };
 
     return (
@@ -100,6 +118,11 @@ export default function HomeUsersList() {
                     />
                     <Button variant="ghost" onClick={findFriendHandle}>
                         <UserPlusIcon className="h-6 w-6"></UserPlusIcon>
+                        {loading && (
+                            <div className="text-center">
+                                <Spinner size="small" />
+                            </div>
+                        )}
                     </Button>
                 </div>
             </div>

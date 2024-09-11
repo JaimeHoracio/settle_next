@@ -14,10 +14,12 @@ import { UserLogged } from "@/app/store/user-logged-store";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserDto } from "@/app/server/types/users-type";
 import { MeetDto } from "@/app/server/types/meets-type";
+import { Spinner } from "@/components/ui/spinner";
 import { v4 as uuidv4 } from "uuid";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddMeet() {
-    //const { userLogged } = useUserLoggedStore((state) => state);
+    const { toast } = useToast();
     const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
@@ -45,6 +47,7 @@ export default function AddMeet() {
 
         if (!name.current?.value) {
             console.warn("El nombre es obligatorio.");
+            showToast("Warning", "El nombre del encuentro es obligatorio.");
         } else {
             try {
                 const user: UserDto = { idUser: "", name: nameUserLogged };
@@ -81,6 +84,15 @@ export default function AddMeet() {
     const goBack = () => {
         goToPath(HOME_MEETS_URL);
     };
+
+    const showToast = (title: string, description: string) => {
+        toast({
+            title: title,
+            description: description,
+            duration: 1500,
+        });
+    };
+
     return (
         <form onSubmit={addMeetMethod}>
             <Label htmlFor="name">Nombre</Label>
@@ -107,6 +119,11 @@ export default function AddMeet() {
                 <Button type="submit" disabled={loading}>
                     {idMeet ? "Actualizar Encuentro" : "Crear Encuentro"}
                 </Button>
+                {loading && (
+                    <div className="text-center mt-1">
+                        <Spinner size="small" />
+                    </div>
+                )}
             </div>
         </form>
     );
