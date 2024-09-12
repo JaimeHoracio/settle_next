@@ -76,6 +76,7 @@ export default function AddMeet() {
                 goBack();
             } catch (error) {
                 console.error(">>> Error: " + error);
+                showToast("Error", "No se pudo crear el encuentro.");
             }
         }
         setLoading(false);
