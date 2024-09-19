@@ -7,7 +7,7 @@ export default function layoutSettle({
     children: React.ReactNode;
 }) {
     return (
-        <main className="bg-amber-500 max-w-6xl mx-auto p-1 flex min-h-screen flex-col items-center justify-between">
+        <main className="bg-emerald-500 max-w-6xl mx-auto p-1 flex min-h-screen flex-col items-center justify-between">
             <HeadSettle></HeadSettle>
             <section className="w-full flex h-screen flex-col md:flex-row md:overflow-hidden">
                 <SideNav />

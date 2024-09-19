@@ -66,7 +66,7 @@ export default function FormLogin() {
     };
 
     const goHomeMeets = () => {
-        router.push(HOME_MEETS_URL);
+        router.replace(HOME_MEETS_URL);
     };
 
     const handleInputName = (n: string) => {

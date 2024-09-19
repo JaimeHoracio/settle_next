@@ -62,6 +62,7 @@ export default function HomeUsersList() {
             showToast("Warning", "Debe escribir nombre del usuario.");
         } else if (LowerStr(inviteFriend) === LowerStr(nameUserLogged)) {
             console.warn(">>> No puede invitarse a si mismo");
+            showToast("Warning", "No puede invitarse a si mismo.");
         } else if (isFriendContainedInList(friends, inviteFriend)) {
             console.warn(">>> El usuario ya esta agregado");
             showToast("Warning", "El usuario ya esta agregado.");

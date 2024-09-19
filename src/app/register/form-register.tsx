@@ -63,7 +63,7 @@ export default function FormRegister() {
                             //Guardo en el storage el usuario logueado.
                             updateUserLoggedStore(new_user);
 
-                            router.push(HOME_MEETS_URL);
+                            router.replace(HOME_MEETS_URL);
                         } else {
                             console.error(
                                 "Error al registrar el usuario, intente en unos minutos."

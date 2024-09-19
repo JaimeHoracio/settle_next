@@ -154,7 +154,7 @@ export default function AddBill() {
     };
 
     const goBack = () => {
-        router.push(HOME_BILLS_URL);
+        router.replace(HOME_BILLS_URL);
     };
 
     return (

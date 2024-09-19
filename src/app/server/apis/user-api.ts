@@ -29,7 +29,7 @@ export async function getUserLoggedApi(name: string, pass: string) {
                 friends: friends
             }
         } else {
-            console.warn(">>> No se encontró el usuario.")
+            console.warn(">>> No se encontró el usuario: " + userLogged.name)
         }
         return undefined;
     } catch (error) {
