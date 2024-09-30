@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+
 import {
     Table,
     TableBody,
@@ -13,12 +15,15 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 import { listBillsByidMeetApi } from "@/app/server/apis/bill-api";
 import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
 import { BillDto } from "@/app/server/types/bills-type";
+import { useEditBillSelectedStore } from "@/app/store/edit-bills-store";
+import { ADD_BILL_URL } from "@/app/settle/components/constants";
 import ResumeBills from "@/app/settle/bills/components/resume-bills";
 
 export default function ListBills() {
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
-    // Const
+    const { updateEditBillStore } = useEditBillSelectedStore((state) => state);
 
+    // Const
     const [bills, setBills] = useState<BillDto[]>([]);
 
     const findListBillsByIdMeet = async (idMeet: string) => {
@@ -32,6 +37,13 @@ export default function ListBills() {
             else billsFromDB = [];
             setBills(billsFromDB);
         }
+    };
+
+    const goEditBill = (editBill: BillDto) => {
+
+        console.log(">>> Edit bill ... ")
+
+        updateEditBillStore(editBill);
     };
 
     useEffect(() => {
@@ -68,7 +80,12 @@ export default function ListBills() {
                             </TableCell>
                             <TableCell className="text-right">
                                 <div className="rounded-full flex flex-row justify-end items-center space-x-3">
-                                    <Pencil1Icon></Pencil1Icon>
+                                    <Link href={ADD_BILL_URL}>
+                                        <Pencil1Icon
+                                            onClick={() =>
+                                                goEditBill(b)
+                                            }></Pencil1Icon>
+                                    </Link>
                                 </div>
                             </TableCell>
                         </TableRow>

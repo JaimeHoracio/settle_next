@@ -8,8 +8,14 @@ import { BillDto } from "../types/bills-type";
 export async function addBillApi(bill: BillDto) {
     try {
         await connectMongoDB()
-        const new_bill = await BillModel.create(bill);
-        return JSON.stringify(new_bill);
+        try {
+            const new_bill = await BillModel.create(bill);
+            if (new_bill) {
+                return "ok";
+            }
+        } catch (error) {
+            return JSON.stringify(error);
+        }
 
     } catch (error) {
         console.error(">>> Error addBillApi:" + error);
@@ -25,8 +31,14 @@ export async function updateBillApi(bill: BillDto) {
         await connectMongoDB()
 
         const query = { _id: bill._id }
-
-        await BillModel.findOneAndUpdate(query, bill);
+        try {
+            const update_bill = await BillModel.findOneAndUpdate(query, bill);
+            if (update_bill) {
+                return "ok";
+            }
+        } catch (error) {
+            return JSON.stringify(error);
+        }
 
     } catch (error) {
         console.error(">>> Error updateBillApi:" + error)

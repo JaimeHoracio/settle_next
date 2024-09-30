@@ -1,9 +1,8 @@
 'use server'
 
 import { connectMongoDB, disconnectMongoDB } from "@/app/server/mongo-db/config/mongo-config";
+import { MeetDto, MeetSelectedDto } from "@/app/server/types/meets-type";
 import MeetModel from "@/app/server/mongo-db/models/meet.model";
-import { MeetDto, MeetSelectedDto } from "../types/meets-type";
-
 
 export async function createMeetApi(meet: MeetDto) {
     try {

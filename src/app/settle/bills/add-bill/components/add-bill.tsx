@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
@@ -16,55 +16,62 @@ import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { isBlank } from "@/app/utils/validation-utils";
 import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
 import { getCurrencyByCode } from "@/app/utils/currency-utils";
-import { addBillApi } from "@/app/server/apis/bill-api";
+import { addBillApi, updateBillApi } from "@/app/server/apis/bill-api";
 import { BillDto, DetailsBillDto } from "@/app/server/types/bills-type";
-// import { useListBillsMeetSelectedStore } from "@/app/store/list-bills-store";
+import {
+    EditBillStore,
+    useEditBillSelectedStore,
+} from "@/app/store/edit-bills-store";
+import { UserDto } from "@/app/server/types/users-type";
 
 export default function AddBill() {
     // Router
     const router = useRouter();
 
-    //const { userLogged } = useUserLoggedStore((state) => state);
     const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
-
-    // const { addBillToListStore } = useListBillsMeetSelectedStore(
-    //     (state) => state
-    // );
 
     // Meet seleccionado.
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     const idMeet = meetSelectedStore ? meetSelectedStore.idMeet : undefined;
-    const nameMeet = meetSelectedStore ? meetSelectedStore.nameMeet : "";
 
-    // Query params
-    const searchParams = useSearchParams();
+    // Resetea el bill persistido en caso de un update.
+    const { resetEditBillStore } = useEditBillSelectedStore((state) => state);
 
     // Const
-    // Estos datos existen si se esta haciendo una modificación solamente.
-    const defualt_reference = searchParams.get("reference")?.toString();
-    const default_amount = searchParams.get("amount")?.toString();
+    let userPaidOption: Option[] = [];
+    let userDebtOption: Option[] = [];
+    let defualt_reference = undefined;
+    let default_amount = undefined;
 
+    const editBill = EditBillStore();
     const friends: UserStore[] | undefined = FriendsUserLogged();
-
     const listFriends: Option[] = friends.map((f) => ({
         value: f.idUserStore,
         label: f.nameUserStore,
     }));
 
-    const ownOpcion: Option[] = [];
-    const ownUser = friends.find((f) => f.nameUserStore === nameUserLogged);
-    if (ownUser) {
-        ownOpcion.push({
-            value: ownUser.idUserStore,
-            label: ownUser.nameUserStore,
-        });
+    // Estos datos existen si se esta haciendo una modificación solamente.
+    if (editBill) {
+        defualt_reference = editBill.reference;
+        default_amount = editBill.receipt.amount;
+        userDebtOption = getFriendByUsers(listFriends, editBill.usersDebt);
+        userPaidOption = getFriendByUsers(listFriends, editBill.usersPaid);
+    } else {
+        const ownUser = friends.find((f) => f.nameUserStore === nameUserLogged);
+        if (ownUser) {
+            userPaidOption.push({
+                value: ownUser.idUserStore,
+                label: ownUser.nameUserStore,
+            });
+        }
+        userDebtOption = listFriends;
     }
 
     // useState
     const [loading, setLoading] = useState(false);
-    const [usersPaid, setUsersPaid] = useState<Option[]>(ownOpcion);
-    const [usersDebt, setUsersDebt] = useState<Option[]>(listFriends);
+    const [usersPaid, setUsersPaid] = useState<Option[]>(userPaidOption);
+    const [usersDebt, setUsersDebt] = useState<Option[]>(userDebtOption);
 
     // useRef
     const reference = useRef<HTMLInputElement>(null);
@@ -96,11 +103,10 @@ export default function AddBill() {
         } else return [];
     };
 
-    const addBillMethod = async (e: React.FormEvent) => {
+    const updateBillMethod = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        //se guarda el gasto
         if (
             !isBlank(reference.current?.value) &&
             !isBlank(amount.current?.value) &&
@@ -124,20 +130,28 @@ export default function AddBill() {
                 usersDebt: getUsersDebt(),
             };
 
-            //Guardo el gasto asociado al encuentro.
             try {
-                const new_bill__from_db = await addBillApi(new_bill);
-                if (!new_bill__from_db || !nameMeet) {
+                // Verifico si es una actualizacion o insercion
+                let is_ok_from_db = undefined;
+                if (editBill) {
+                    new_bill._id = editBill._id;
+
+                    console.log(">>>> update bill : " + new_bill._id)
+
+                    is_ok_from_db = await updateBillApi(new_bill);
+                } else {
+                    is_ok_from_db = await addBillApi(new_bill);
+                }
+
+                if (!is_ok_from_db) {
                     console.error(
                         ">>> Error, respuesta al agregar un pago: " +
-                            new_bill__from_db
+                            is_ok_from_db
                     );
+                } else {
+                    resetEditBillStore();
+                    goBack();
                 }
-                // else {
-                //     Guardo el nuevo pago en storage
-                //     addBillToListStore(nameMeet, new_bill);
-                // }
-                goBack();
             } catch (error) {
                 console.error(error);
             }
@@ -159,7 +173,7 @@ export default function AddBill() {
 
     return (
         <article>
-            <form onSubmit={addBillMethod}>
+            <form onSubmit={updateBillMethod}>
                 <Label htmlFor="name">Referencia</Label>
                 <Input
                     type="text"
@@ -213,7 +227,7 @@ export default function AddBill() {
                     <Button
                         type="submit"
                         disabled={loading}
-                        //onClick={addBillMethod}
+                        //onClick={updateBillMethod}
                     >
                         Agregar Gasto
                     </Button>
@@ -221,4 +235,19 @@ export default function AddBill() {
             </form>
         </article>
     );
+}
+
+function getFriendByUsers(
+    listFriends: Option[],
+    listUsersDebt: DetailsBillDto[]
+): any {
+    // throw new Error("Function not implemented.");
+    let result: Option[] = [];
+    listUsersDebt.map((b) => {
+        const friend = listFriends.filter((f) => f.label === b.user);
+        if (friend && friend[0] != null) {
+            result.push(friend[0]);
+        }
+    });
+    return result;
 }
