@@ -40,8 +40,7 @@ export default function ListBills() {
     };
 
     const goEditBill = (editBill: BillDto) => {
-
-        console.log(">>> Edit bill ... ")
+        console.log(">>> Edit bill ... ");
 
         updateEditBillStore(editBill);
     };
@@ -52,8 +51,10 @@ export default function ListBills() {
     }, [meetSelectedStore]);
 
     return (
-        <>
+        <article>
+            {/* Muestro el resumen solo si hay pagos realizados. */}
             {bills.length > 0 && <ResumeBills listaBills={bills}></ResumeBills>}
+
             <Table className="mt-1">
                 <TableHeader>
                     <TableRow>
@@ -92,6 +93,6 @@ export default function ListBills() {
                     ))}
                 </TableBody>
             </Table>
-        </>
+        </article>
     );
 }

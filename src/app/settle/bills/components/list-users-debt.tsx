@@ -36,14 +36,14 @@ export default function ListUsersDebt({
 
     return (
         <Card className="w-auto mb-1">
-            <CardContent>
+            <CardContent className="p-0">
                 <Table className="text-xs border-0 m-0">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">Deudor</TableHead>
+                            <TableHead className="w-[100px] rounded">Deudor</TableHead>
                             <TableHead>Monto</TableHead>
                             <TableHead></TableHead>
-                            <TableHead className="text-right">
+                            <TableHead className="text-right rounded">
                                 Acreedor
                             </TableHead>
                         </TableRow>
@@ -51,7 +51,7 @@ export default function ListUsersDebt({
                     <TableBody>
                         {list_expenses.map((row, index) => (
                             <TableRow key={index}>
-                                <TableCell className="font-medium">
+                                <TableCell className="font-medium rounded">
                                     {row.nameDebt}
                                 </TableCell>
                                 <TableCell>{`${row.currency} ${round2Dec(row.totalAmount)}`}</TableCell>
@@ -64,8 +64,8 @@ export default function ListUsersDebt({
                     </TableBody>
                     <TableFooter>
                         <TableRow>
-                            <TableCell colSpan={3}>Total</TableCell>
-                            <TableCell className="text-right">{`${currency} ${round2Dec(total)}`}</TableCell>
+                            <TableCell colSpan={3} className="rounded">Total</TableCell>
+                            <TableCell className="text-right rounded">{`${currency} ${round2Dec(total)}`}</TableCell>
                         </TableRow>
                     </TableFooter>
                 </Table>

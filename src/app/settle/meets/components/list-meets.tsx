@@ -23,15 +23,11 @@ import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { MeetDto } from "@/app/server/types/meets-type";
 
 export default function ListMeets() {
-    //const { userLogged } = useUserLoggedStore((state) => state);
     const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     const { updateMeetSelectedStore } = useMeetSelectedStore((state) => state);
-    // const { createBillsMeetStore } = useListBillsMeetSelectedStore(
-    //     (state) => state
-    // );
 
     const [meets, setMeets] = useState<MeetDto[]>([]);
 
@@ -54,7 +50,7 @@ export default function ListMeets() {
         }
     };
 
-    const refreshAction = (reload: boolean) => {
+    const removeAction = (reload: boolean) => {
         if (reload) {
             getListMeetsFromDB();
         }
@@ -111,67 +107,69 @@ export default function ListMeets() {
     }, []);
 
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[150px]">Principal</TableHead>
-                    <TableHead className="w-[150px]">Nombre</TableHead>
-                    <TableHead>Descripción</TableHead>
-                    <TableHead>Creador</TableHead>
-                    <TableHead>F. Creación</TableHead>
-                    <TableHead className="text-right">Acción</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {meets.map((m, index) => (
-                    <TableRow key={m.idMeet}>
-                        <TableCell className="font-medium">
-                            <Checkbox
-                                checked={meetSelected[index]}
-                                onCheckedChange={() =>
-                                    changeMainMeetSelected(index)
-                                }></Checkbox>
-                        </TableCell>
-                        <TableCell
-                            className="font-medium"
-                            onClick={() => changeMainMeetSelected(index)}>
-                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
-                                {m.name}
-                            </Link>
-                        </TableCell>
-                        <TableCell
-                            onClick={() => changeMainMeetSelected(index)}>
-                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
-                                {m.details}
-                            </Link>
-                        </TableCell>
-                        <TableCell
-                            onClick={() => changeMainMeetSelected(index)}>
-                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
-                                {m.createdBy.name}
-                            </Link>
-                        </TableCell>
-                        <TableCell
-                            onClick={() => changeMainMeetSelected(index)}>
-                            <Link key={m.idMeet} href={HOME_BILLS_URL}>
-                                {"fecha"}
-                            </Link>
-                        </TableCell>
-                        <TableCell className="text-right">
-                            <div className="rounded-full flex flex-row justify-end items-center space-x-3">
-                                <Link
-                                    key={m.idMeet}
-                                    href={`/settle/meets/add-meet?idMeet=${m.idMeet}&name=${m.name}&details=${m.details}`}>
-                                    <Pencil1Icon></Pencil1Icon>
-                                </Link>
-                                <RemoveMeet
-                                    idMeet={m.idMeet}
-                                    refresh={refreshAction}></RemoveMeet>
-                            </div>
-                        </TableCell>
+        <article>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[150px]">Selec.</TableHead>
+                        <TableHead className="w-[150px]">Nombre</TableHead>
+                        <TableHead>Descripción</TableHead>
+                        <TableHead>Creador</TableHead>
+                        <TableHead>Creación</TableHead>
+                        <TableHead className="text-right">Acción</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {meets.map((m, index) => (
+                        <TableRow key={m.idMeet}>
+                            <TableCell className="font-medium">
+                                <Checkbox
+                                    checked={meetSelected[index]}
+                                    onCheckedChange={() =>
+                                        changeMainMeetSelected(index)
+                                    }></Checkbox>
+                            </TableCell>
+                            <TableCell
+                                className="font-medium"
+                                onClick={() => changeMainMeetSelected(index)}>
+                                <Link key={m.idMeet} href={HOME_BILLS_URL}>
+                                    {m.name}
+                                </Link>
+                            </TableCell>
+                            <TableCell
+                                onClick={() => changeMainMeetSelected(index)}>
+                                <Link key={m.idMeet} href={HOME_BILLS_URL}>
+                                    {m.details}
+                                </Link>
+                            </TableCell>
+                            <TableCell
+                                onClick={() => changeMainMeetSelected(index)}>
+                                <Link key={m.idMeet} href={HOME_BILLS_URL}>
+                                    {m.createdBy.name}
+                                </Link>
+                            </TableCell>
+                            <TableCell
+                                onClick={() => changeMainMeetSelected(index)}>
+                                <Link key={m.idMeet} href={HOME_BILLS_URL}>
+                                    {"fecha"}
+                                </Link>
+                            </TableCell>
+                            <TableCell className="text-right">
+                                <div className="rounded-full flex flex-row justify-end items-center space-x-3">
+                                    <Link
+                                        key={m.idMeet}
+                                        href={`/settle/meets/add-meet?idMeet=${m.idMeet}&name=${m.name}&details=${m.details}`}>
+                                        <Pencil1Icon></Pencil1Icon>
+                                    </Link>
+                                    <RemoveMeet
+                                        idMeet={m.idMeet}
+                                        response={removeAction}></RemoveMeet>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </article>
     );
 }

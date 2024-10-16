@@ -95,37 +95,39 @@ export default function AddMeet() {
     };
 
     return (
-        <form onSubmit={addMeetMethod}>
-            <Label htmlFor="name">Nombre</Label>
-            <Input
-                type="text"
-                id="name"
-                placeholder="Nombre"
-                ref={name}
-                defaultValue={default_name}
-                //value={name}
-                //onChange={(e) => setName(e.target.value)}
-            />
-            <Label htmlFor="details">Descripción</Label>
-            <Input
-                type="text"
-                id="details"
-                placeholder="Descripción"
-                ref={details}
-                defaultValue={default_details}
-            />
+        <article>
+            <form onSubmit={addMeetMethod}>
+                <Label htmlFor="name">Nombre</Label>
+                <Input
+                    type="text"
+                    id="name"
+                    placeholder="Nombre"
+                    ref={name}
+                    defaultValue={default_name}
+                    //value={name}
+                    //onChange={(e) => setName(e.target.value)}
+                />
+                <Label htmlFor="details">Descripción</Label>
+                <Input
+                    type="text"
+                    id="details"
+                    placeholder="Descripción"
+                    ref={details}
+                    defaultValue={default_details}
+                />
 
-            <div className="flex flex-row justify-end space-x-4 py-4">
-                <Button onClick={goBack}>Cancelar</Button>
-                <Button type="submit" disabled={loading}>
-                    {idMeet ? "Actualizar Encuentro" : "Crear Encuentro"}
-                </Button>
-                {loading && (
-                    <div className="text-center mt-1">
-                        <Spinner size="small" />
-                    </div>
-                )}
-            </div>
-        </form>
+                <div className="flex flex-row justify-end space-x-4 py-4">
+                    <Button onClick={goBack}>Cancelar</Button>
+                    <Button type="submit" disabled={loading}>
+                        {idMeet ? "Actualizar Encuentro" : "Crear Encuentro"}
+                    </Button>
+                    {loading && (
+                        <div className="text-center mt-1">
+                            <Spinner size="small" />
+                        </div>
+                    )}
+                </div>
+            </form>
+        </article>
     );
 }

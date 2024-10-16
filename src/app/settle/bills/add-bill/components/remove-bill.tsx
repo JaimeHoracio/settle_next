@@ -1,5 +1,6 @@
 "use client";
 
+import { removeBillApi } from "@/app/server/apis/bill-api";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -11,13 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { removeMeetApi } from "@/app/server/apis/meets-api";
 
-export default function RemoveMeet({
-    idMeet,
+export default function RemoveBill({
+    idBill,
     response,
 }: {
-    idMeet: string;
+    idBill: string;
     response: (x: boolean) => void;
 }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function RemoveMeet({
     const handleButtonClick = async (isAllowRemove: boolean) => {
         setLoading(true);
         if (isAllowRemove) {
-            await removeMeetApi(idMeet);
+            await removeBillApi(idBill);
             response(true);
             setIsOpen(false);
         }
@@ -41,9 +41,9 @@ export default function RemoveMeet({
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Seguro de elimnar el encuentro?</DialogTitle>
+                    <DialogTitle>Seguro de elimnar el pago?</DialogTitle>
                     <DialogDescription>
-                        Se eliminará el encuentro permanentemente.
+                        Se eliminará el pago permanentemente.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-row justify-center space-x-4 py-4">

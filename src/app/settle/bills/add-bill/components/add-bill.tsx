@@ -22,7 +22,10 @@ import {
     EditBillStore,
     useEditBillSelectedStore,
 } from "@/app/store/edit-bills-store";
-import { UserDto } from "@/app/server/types/users-type";
+import Link from "next/link";
+import { DeleteIcon } from "lucide-react";
+import { TrashIcon } from "@radix-ui/react-icons";
+import RemoveBill from "./remove-bill";
 
 export default function AddBill() {
     // Router
@@ -136,7 +139,7 @@ export default function AddBill() {
                 if (editBill) {
                     new_bill._id = editBill._id;
 
-                    console.log(">>>> update bill : " + new_bill._id)
+                    console.log(">>>> update bill : " + new_bill._id);
 
                     is_ok_from_db = await updateBillApi(new_bill);
                 } else {
@@ -165,6 +168,12 @@ export default function AddBill() {
 
     const selectCurrencyHandler = (selectedCurrency: string) => {
         setCurrency(selectedCurrency);
+    };
+
+    const removeAction = (reload: boolean) => {
+        if (reload) {
+            goBack();
+        }
     };
 
     const goBack = () => {
@@ -222,15 +231,20 @@ export default function AddBill() {
                         </p>
                     }></MultipleSelector>
 
-                <div className="flex flex-row justify-end space-x-4 py-4">
-                    <Button onClick={goBack}>Cancelar</Button>
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                        //onClick={updateBillMethod}
-                    >
-                        Agregar Gasto
-                    </Button>
+                <div className="flex flex-row justify-between py-4">
+                    <div className="flex flex-row justify-start py-4">
+                        {editBill && (
+                            <RemoveBill
+                                idBill={editBill._id as string}
+                                response={removeAction}></RemoveBill>
+                        )}
+                    </div>
+                    <div className="flex flex-row justify-end space-x-4 py-4">
+                        <Button onClick={goBack}>Cancelar</Button>
+                        <Button type="submit" disabled={loading}>
+                            Agregar Gasto
+                        </Button>
+                    </div>
                 </div>
             </form>
         </article>
