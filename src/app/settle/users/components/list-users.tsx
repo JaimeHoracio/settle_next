@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
     Table,
@@ -23,7 +24,6 @@ import {
     findFriendsByNameApi,
 } from "@/app/server/apis/user-api";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { UserDto } from "@/app/server/types/users-type";

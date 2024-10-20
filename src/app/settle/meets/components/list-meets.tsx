@@ -21,6 +21,7 @@ import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
 // import { useListBillsMeetSelectedStore } from "@/app/store/list-bills-store";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { MeetDto } from "@/app/server/types/meets-type";
+import HeadListMeet from "./header-list-meet";
 
 export default function ListMeets() {
     const userLogged = UserLogged();
@@ -108,6 +109,7 @@ export default function ListMeets() {
 
     return (
         <article>
+            <HeadListMeet></HeadListMeet>
             <Table>
                 <TableHeader>
                     <TableRow>

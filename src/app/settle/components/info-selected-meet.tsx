@@ -6,7 +6,7 @@ import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 
-export default function CurrentMeet() {
+export default function InfoSelectedMeet() {
     //const { meetSelectedStore } = useMeetSelectedStore((state) => state);
     const meetSelectedStore = MeetSelected()
     // Const

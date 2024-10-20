@@ -17,6 +17,7 @@ import { MeetDto } from "@/app/server/types/meets-type";
 import { Spinner } from "@/components/ui/spinner";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/hooks/use-toast";
+import HeadAddMeet from "./head-add-meet";
 
 export default function AddMeet() {
     const { toast } = useToast();
@@ -96,6 +97,7 @@ export default function AddMeet() {
 
     return (
         <article>
+            <HeadAddMeet></HeadAddMeet>
             <form onSubmit={addMeetMethod}>
                 <Label htmlFor="name">Nombre</Label>
                 <Input
