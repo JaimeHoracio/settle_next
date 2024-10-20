@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { removeMeetApi } from "@/app/server/apis/meets-api";
+import { DialogRemoveMeetApi } from "@/app/server/apis/meets-api";
 
-export default function RemoveMeet({
+export default function DialogRemoveMeet({
     idMeet,
     response,
 }: {
@@ -27,7 +27,7 @@ export default function RemoveMeet({
     const handleButtonClick = async (isAllowRemove: boolean) => {
         setLoading(true);
         if (isAllowRemove) {
-            await removeMeetApi(idMeet);
+            await DialogRemoveMeetApi(idMeet);
             response(true);
             setIsOpen(false);
         }

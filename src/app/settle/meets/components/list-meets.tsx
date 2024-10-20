@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import RemoveMeet from "@/app/settle/meets/components/remove-meet";
+import DialogRemoveMeet from "@/app/settle/meets/components/dialog-remove-meet";
 
 import { listMeetsActiveByUserNameApi } from "@/app/server/apis/meets-api";
 import { UserLogged } from "@/app/store/user-logged-store";
@@ -161,9 +161,11 @@ export default function ListMeets() {
                                         href={`/settle/meets/add-meet?idMeet=${m.idMeet}&name=${m.name}&details=${m.details}`}>
                                         <Pencil1Icon></Pencil1Icon>
                                     </Link>
-                                    <RemoveMeet
+                                    <DialogRemoveMeet
                                         idMeet={m.idMeet}
-                                        response={removeAction}></RemoveMeet>
+                                        response={
+                                            removeAction
+                                        }></DialogRemoveMeet>
                                 </div>
                             </TableCell>
                         </TableRow>

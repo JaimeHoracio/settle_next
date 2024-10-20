@@ -46,12 +46,12 @@ export async function closeMeetApi(idMeet: string) {
     }
 }
 
-export async function removeMeetApi(idMeet: string) {
+export async function DialogRemoveMeetApi(idMeet: string) {
     try {
         await connectMongoDB()
         await MeetModel.deleteOne({ idMeet });
     } catch (error) {
-        console.error(">>> Error removeMeetApi: " + error)
+        console.error(">>> Error DialogRemoveMeetApi: " + error)
     } finally {
         await disconnectMongoDB();
     }

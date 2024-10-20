@@ -23,14 +23,14 @@ import {
     findFriendsByNameApi,
 } from "@/app/server/apis/user-api";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import RemoveUser from "@/app/settle/users/components/remove-user";
+import { useEffect, useState } from "react";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { UserDto } from "@/app/server/types/users-type";
 import { LowerStr } from "@/app/utils/strings-utils";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/hooks/use-toast";
+import RemoveUser from "@/app/settle/users/components/remove-user";
 
 export default function HomeUsersList() {
     const { toast } = useToast();

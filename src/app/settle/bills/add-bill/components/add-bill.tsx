@@ -22,9 +22,6 @@ import {
     EditBillStore,
     useEditBillSelectedStore,
 } from "@/app/store/edit-bills-store";
-import Link from "next/link";
-import { DeleteIcon } from "lucide-react";
-import { TrashIcon } from "@radix-ui/react-icons";
 import RemoveBill from "./remove-bill";
 
 export default function AddBill() {

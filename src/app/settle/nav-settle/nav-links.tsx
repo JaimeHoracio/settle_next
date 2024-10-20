@@ -11,7 +11,6 @@ import { UserLogged } from "@/app/store/user-logged-store";
 import { useRef } from "react";
 import { ROOT_SETTLE_URL } from "@/app/settle/components/constants";
 
-// Map of links to display in the side navigation.
 const links = [
     { name: "Encuentros", href: "/settle/meets", icon: HomeIcon },
     {
@@ -25,7 +24,6 @@ const links = [
 export default function NavLinks() {
     const router = useRouter();
 
-    //const { userLogged } = useUserLoggedStore((state) => state);
     const userLogged = UserLogged();
     const nameUserLogged = userLogged?.name as string;
 
@@ -45,7 +43,6 @@ export default function NavLinks() {
                     return (
                         <Link
                             key={link.name}
-                            /*href={`${link.href}/${encodeURIComponent(nameUserLogged as string)}`}*/
                             href={link.href}
                             className="flex h-[38px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
                             <LinkIcon className="w-6" />

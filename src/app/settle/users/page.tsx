@@ -1,9 +1,10 @@
 import { Suspense } from "react";
-import HomeUsersList from "./components/list-users";
+import HomeUsersList from "@/app/settle/users/components/list-users";
+import DialogSpinner from "@/app/settle/components/dialog-spinner";
 
 export default function UsersPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<DialogSpinner></DialogSpinner>}>
             <HomeUsersList></HomeUsersList>
         </Suspense>
     );
