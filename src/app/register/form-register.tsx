@@ -16,7 +16,7 @@ import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import Link from "next/link";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserLoggedDto } from "@/app/server/types/users-type";
-import { LowerStr } from "@/app/utils/strings-utils";
+import { convertStrToLower } from "@/app/utils/strings-utils";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function FormRegister() {
@@ -46,7 +46,7 @@ export default function FormRegister() {
                     try {
                         const new_user: UserLoggedDto | undefined =
                             await registerUserLoggedApi(
-                                LowerStr(name),
+                                convertStrToLower(name),
                                 password
                             );
                         if (new_user) {

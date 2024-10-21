@@ -402,7 +402,7 @@ const MultipleSelector = React.forwardRef<
                     className={cn(
                         "min-h-10 rounded-md border border-input text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
                         {
-                            "px-3 py-2": selected.length !== 0,
+                            "px-2 py-1": selected.length !== 0,
                             "cursor-text": !disabled && selected.length !== 0,
                         },
                         className
@@ -413,10 +413,10 @@ const MultipleSelector = React.forwardRef<
                     }}
                 >
                     <div className="flex space-x-1">
-                        {selected.map((option) => {
+                        {selected.map((option, index) => {
                             return (
                                 <Badge
-                                    key={option.value}
+                                    key={index}
                                     variant="outline"
                                     /* HZ - ANTES ESTABA ESTO, LO COMENTO.
                                     className={cn(
@@ -446,10 +446,10 @@ const MultipleSelector = React.forwardRef<
                                         }}
                                         onClick={() => handleUnselect(option)}
                                     >
-                                        <div key={option.value}
+                                        <div key={option.value+"borrar"}
                                             className="h-3 w-3 mb-1 text-muted-foreground hover:text-foreground"
                                         >
-                                            x
+                                            X
                                         </div>
                                     </button>
                                 </Badge>
@@ -485,7 +485,7 @@ const MultipleSelector = React.forwardRef<
                                 "flex-1 bg-transparent outline-none placeholder:text-muted-foreground",
                                 {
                                     "w-full": hidePlaceholderWhenSelected,
-                                    "px-3 py-2": selected.length === 0,
+                                    "px-2 py-1": selected.length === 0,
                                     "ml-1": selected.length !== 0,
                                 },
                                 inputProps?.className

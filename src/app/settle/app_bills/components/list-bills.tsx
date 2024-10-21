@@ -15,13 +15,14 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 import { listBillsByidMeetApi } from "@/app/server/apis/bill-api";
 import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
 import { BillDto } from "@/app/server/types/bills-type";
-import { useEditBillSelectedStore } from "@/app/store/edit-bills-store";
+import { useBillSelectedStore } from "@/app/store/bills-store";
 import { ADD_BILL_URL } from "@/app/settle/components/constants";
-import ResumeBills from "@/app/settle/bills/components/resume-bills";
+import ResumeBills from "@/app/settle/app_bills/components/resume-bills";
+import DialogSpinner from "@/app/settle/components/dialog-spinner";
 
 export default function ListBills() {
     const { meetSelectedStore } = useMeetSelectedStore((state) => state);
-    const { updateEditBillStore } = useEditBillSelectedStore((state) => state);
+    const { updateBillSelectedStore } = useBillSelectedStore((state) => state);
 
     // Const
     const [bills, setBills] = useState<BillDto[]>([]);
@@ -35,6 +36,9 @@ export default function ListBills() {
 
             if (responseListBills) billsFromDB = JSON.parse(responseListBills);
             else billsFromDB = [];
+
+            // SI LA LISTA DE BILLS NO ES VACIA DEBO OBTENER DE AQUI LA LISTA DE FRIENDS Y PERSISTIRLA EN EL STORAGE.
+
             setBills(billsFromDB);
         }
     };
@@ -42,7 +46,7 @@ export default function ListBills() {
     const goEditBill = (editBill: BillDto) => {
         console.log(">>> Edit bill ... ");
 
-        updateEditBillStore(editBill);
+        updateBillSelectedStore(editBill);
     };
 
     useEffect(() => {
@@ -52,6 +56,7 @@ export default function ListBills() {
 
     return (
         <article>
+            {bills.length == 0 && <DialogSpinner></DialogSpinner>}
             {/* Muestro el resumen solo si hay pagos realizados. */}
             {bills.length > 0 && <ResumeBills listaBills={bills}></ResumeBills>}
 

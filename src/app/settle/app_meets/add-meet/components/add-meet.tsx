@@ -15,9 +15,9 @@ import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserDto } from "@/app/server/types/users-type";
 import { MeetDto } from "@/app/server/types/meets-type";
 import { Spinner } from "@/components/ui/spinner";
-import { v4 as uuidv4 } from "uuid";
 import { useToast } from "@/hooks/use-toast";
 import HeadAddMeet from "./head-add-meet";
+import { randomID } from "@/app/utils/uuid-utils";
 
 export default function AddMeet() {
     const { toast } = useToast();
@@ -61,7 +61,7 @@ export default function AddMeet() {
                         primary: primary ? true : false,
                     });
                 } else {
-                    let uuidMeet = uuidv4();
+                    let uuidMeet = randomID();
                     const meetdto: MeetDto = {
                         idMeet: uuidMeet,
                         createdBy: user,
@@ -119,7 +119,7 @@ export default function AddMeet() {
                 />
 
                 <div className="flex flex-row justify-end space-x-4 py-4">
-                    <Button onClick={goBack}>Cancelar</Button>
+                    <Button type="reset" onClick={goBack}>Cancelar</Button>
                     <Button type="submit" disabled={loading}>
                         {idMeet ? "Actualizar Encuentro" : "Crear Encuentro"}
                     </Button>

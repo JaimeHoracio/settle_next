@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import HomeUsersList from "@/app/settle/users/components/list-users";
+import HomeUsersList from "@/app/settle/app_users/components/list-users";
 import DialogSpinner from "@/app/settle/components/dialog-spinner";
 
 export default function UsersPage() {

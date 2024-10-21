@@ -1,12 +1,14 @@
 import React, { Suspense } from "react";
 
-import ListBills from "@/app/settle/bills/components/list-bills";
+import AddBill from "./components/add-bill";
 import DialogSpinner from "@/app/settle/components/dialog-spinner";
+import HeadAddBill from "./components/head-add-bill";
 
-export default function BillsHome() {
+export default function AddBillPage() {
     return (
         <Suspense fallback={<DialogSpinner></DialogSpinner>}>
-            <ListBills></ListBills>
+            <HeadAddBill></HeadAddBill>
+            <AddBill></AddBill>
         </Suspense>
     );
 }

@@ -1,5 +1,4 @@
-import InfoSelectedMeet from "../components/info-selected-meet";
-import HeadBill from "./components/head-bill";
+import InfoSelectedMeet from "@/app/settle/components/info-selected-meet";
 
 export default function layoutSettle({
     children,
@@ -9,7 +8,6 @@ export default function layoutSettle({
     return (
         <>
             <InfoSelectedMeet></InfoSelectedMeet>
-            <HeadBill></HeadBill>
             {children}
         </>
     );

@@ -10,7 +10,7 @@ export default function LoginPage() {
                 <p className="text-center">
                     No se ha registrado?
                     <Link
-                        className="text-indigo-500 mx-2 hover:underline"
+                        className="text-blue-200 mx-2 hover:underline"
                         href="/register">
                         Crear Cuenta
                     </Link>

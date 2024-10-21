@@ -11,7 +11,7 @@ import { getUserLoggedApi } from "@/app/server/apis/user-api";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import { HOME_MEETS_URL } from "@/app/settle/components/constants";
 import { UserLoggedDto } from "@/app/server/types/users-type";
-import { LowerStr } from "@/app/utils/strings-utils";
+import { convertStrToLower } from "@/app/utils/strings-utils";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function FormLogin() {
@@ -30,7 +30,7 @@ export default function FormLogin() {
         setLoading(true);
         try {
             const userFromServer: UserLoggedDto | undefined =
-                await getUserLoggedApi(LowerStr(name), password);
+                await getUserLoggedApi(convertStrToLower(name), password);
 
             if (userFromServer) {
                 //Busco los amigos para crear encuentros y dividir gastos.

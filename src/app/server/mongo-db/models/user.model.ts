@@ -5,5 +5,6 @@ export const UserSchema = new Schema({
     name: String
 })
 
+// Se utiliza para el campo friends de usuarios logueados.
 const UserModel = mongoose.models.Users || mongoose.model("Users", UserSchema);
 export default UserModel;

@@ -16,7 +16,7 @@ import { goToPath } from "@/app/utils/go-to-path";
 import { UserStore, useUserLoggedStore } from "@/app/store/user-logged-store";
 import { HOME_USERS_URL } from "@/app/settle/components/constants";
 
-export default function RemoveUser({
+export default function DialogRemoveUser({
     nameUserLogged,
     oldFriend,
 }: {
@@ -48,7 +48,7 @@ export default function RemoveUser({
                 <DialogHeader>
                     <DialogTitle>Eliminar usuario</DialogTitle>
                     <DialogDescription>
-                        Se aliminará el usuario de forma permanente.
+                        El usuario se elimina de forma permanente.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-row justify-center space-x-4 py-4">

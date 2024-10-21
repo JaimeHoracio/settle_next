@@ -12,16 +12,14 @@ import {
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import DialogRemoveMeet from "@/app/settle/meets/components/dialog-remove-meet";
-
 import { listMeetsActiveByUserNameApi } from "@/app/server/apis/meets-api";
 import { UserLogged } from "@/app/store/user-logged-store";
 import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
-
-// import { useListBillsMeetSelectedStore } from "@/app/store/list-bills-store";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
 import { MeetDto } from "@/app/server/types/meets-type";
+import DialogRemoveMeet from "@/app/settle/app_meets/components/dialog-remove-meet";
 import HeadListMeet from "./header-list-meet";
+import DialogSpinner from "@/app/settle/components/dialog-spinner";
 
 export default function ListMeets() {
     const userLogged = UserLogged();
@@ -67,8 +65,6 @@ export default function ListMeets() {
             nameMeet: meetsList[index].name,
         };
         updateMeetSelectedStore(meet_selected);
-        // Creo lista de bills para persistir ligada al encuentro.
-        // createBillsMeetStore(meet_selected.nameMeet);
     };
 
     const changeMainMeetSelected = (index: number) => {
@@ -109,6 +105,7 @@ export default function ListMeets() {
 
     return (
         <article>
+            {meets && meets.length == 0 && <DialogSpinner></DialogSpinner>}
             <HeadListMeet></HeadListMeet>
             <Table>
                 <TableHeader>
@@ -160,7 +157,7 @@ export default function ListMeets() {
                                 <div className="rounded-full flex flex-row justify-end items-center space-x-3">
                                     <Link
                                         key={m.idMeet}
-                                        href={`/settle/meets/add-meet?idMeet=${m.idMeet}&name=${m.name}&details=${m.details}`}>
+                                        href={`/settle/app_meets/add-meet?idMeet=${m.idMeet}&name=${m.name}&details=${m.details}`}>
                                         <Pencil1Icon></Pencil1Icon>
                                     </Link>
                                     <DialogRemoveMeet

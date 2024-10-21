@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 import SelectCurrency from "@/app/settle/currency/select-currency";
 import {
@@ -13,18 +14,19 @@ import {
     UserStore,
 } from "@/app/store/user-logged-store";
 import { HOME_BILLS_URL } from "@/app/settle/components/constants";
-import { isBlank } from "@/app/utils/validation-utils";
+import { isBlank } from "@/app/utils/strings-utils";
 import { useMeetSelectedStore } from "@/app/store/meet-selected-store";
 import { getCurrencyByCode } from "@/app/utils/currency-utils";
 import { addBillApi, updateBillApi } from "@/app/server/apis/bill-api";
 import { BillDto, DetailsBillDto } from "@/app/server/types/bills-type";
 import {
-    EditBillStore,
-    useEditBillSelectedStore,
-} from "@/app/store/edit-bills-store";
+    BillSelectedStore,
+    useBillSelectedStore,
+} from "@/app/store/bills-store";
 import RemoveBill from "./remove-bill";
 
 export default function AddBill() {
+    const { toast } = useToast();
     // Router
     const router = useRouter();
 
@@ -36,7 +38,7 @@ export default function AddBill() {
     const idMeet = meetSelectedStore ? meetSelectedStore.idMeet : undefined;
 
     // Resetea el bill persistido en caso de un update.
-    const { resetEditBillStore } = useEditBillSelectedStore((state) => state);
+    const { resetBillSelectedStore } = useBillSelectedStore((state) => state);
 
     // Const
     let userPaidOption: Option[] = [];
@@ -44,7 +46,7 @@ export default function AddBill() {
     let defualt_reference = undefined;
     let default_amount = undefined;
 
-    const editBill = EditBillStore();
+    const editBill = BillSelectedStore();
     const friends: UserStore[] | undefined = FriendsUserLogged();
     const listFriends: Option[] = friends.map((f) => ({
         value: f.idUserStore,
@@ -79,6 +81,14 @@ export default function AddBill() {
     const [currency, setCurrency] = useState<string>("UYU");
 
     // Methods
+    const showToast = (title: string, description: string) => {
+        toast({
+            title: title,
+            description: description,
+            duration: 1500,
+        });
+    };
+
     const getUsersPaid = () => {
         if (usersPaid && usersPaid.length > 0) {
             const amountPaidPerUser =
@@ -106,7 +116,6 @@ export default function AddBill() {
     const updateBillMethod = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
         if (
             !isBlank(reference.current?.value) &&
             !isBlank(amount.current?.value) &&
@@ -135,9 +144,6 @@ export default function AddBill() {
                 let is_ok_from_db = undefined;
                 if (editBill) {
                     new_bill._id = editBill._id;
-
-                    console.log(">>>> update bill : " + new_bill._id);
-
                     is_ok_from_db = await updateBillApi(new_bill);
                 } else {
                     is_ok_from_db = await addBillApi(new_bill);
@@ -149,17 +155,33 @@ export default function AddBill() {
                             is_ok_from_db
                     );
                 } else {
-                    resetEditBillStore();
+                    resetBillSelectedStore();
                     goBack();
                 }
             } catch (error) {
                 console.error(error);
             }
         } else {
-            // Alerta para indicar que son obligatorios los campos
-            console.log(">>> Rellene campos obligatorios.");
+            setLoading(false);
+            console.log(">>> Complete campos obligatorios.");
+            if (
+                isBlank(reference.current?.value) ||
+                isBlank(amount.current?.value) ||
+                isBlank(currency)
+            ) {
+                showToast("Info", "Complete campos obligatorios.");
+            } else if (usersPaid.length === 0) {
+                showToast(
+                    "Warning",
+                    "Debe seleccionar al menos un usuario pagador."
+                );
+            } else if (usersDebt.length === 0) {
+                showToast(
+                    "Warning",
+                    "Debe seleccionar al menos un usuario deudor."
+                );
+            }
         }
-
         //setLoading(false);
     };
 
@@ -205,7 +227,7 @@ export default function AddBill() {
                             selectCurrencyHandler
                         }></SelectCurrency>
                 </div>
-                <Label htmlFor="details">Pagador</Label>
+                <Label htmlFor="usersPaid">Pagador</Label>
                 <MultipleSelector
                     key="usersPaid"
                     value={usersPaid}
@@ -216,7 +238,7 @@ export default function AddBill() {
                             No hay usuarios.
                         </p>
                     }></MultipleSelector>
-                <Label htmlFor="details">Deudores</Label>
+                <Label htmlFor="usersDebt">Deudores</Label>
                 <MultipleSelector
                     key="usersDebt"
                     value={usersDebt}
@@ -237,9 +259,9 @@ export default function AddBill() {
                         )}
                     </div>
                     <div className="flex flex-row justify-end space-x-4 py-4">
-                        <Button onClick={goBack}>Cancelar</Button>
+                        <Button type="reset" onClick={goBack}>Cancelar</Button>
                         <Button type="submit" disabled={loading}>
-                            Agregar Gasto
+                            {editBill ? "Actualizar Gasto" : "Agregar Gasto"}
                         </Button>
                     </div>
                 </div>

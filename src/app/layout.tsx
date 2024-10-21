@@ -10,8 +10,8 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-    title: "Sivonei",
-    description: "Aplicacion Sivonei",
+    title: "Settle",
+    description: "Aplicacion Settle",
 };
 
 export default function RootLayout({

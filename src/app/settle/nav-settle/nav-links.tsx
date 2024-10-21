@@ -12,13 +12,13 @@ import { useRef } from "react";
 import { ROOT_SETTLE_URL } from "@/app/settle/components/constants";
 
 const links = [
-    { name: "Encuentros", href: "/settle/meets", icon: HomeIcon },
+    { name: "Encuentros", href: "/settle/app_meets", icon: HomeIcon },
     {
         name: "Gastos",
-        href: "/settle/bills",
+        href: "/settle/app_bills",
         icon: DocumentDuplicateIcon,
     },
-    { name: "Usuarios", href: "/settle/users", icon: UserGroupIcon },
+    { name: "Usuarios", href: "/settle/app_users", icon: UserGroupIcon },
 ];
 
 export default function NavLinks() {
