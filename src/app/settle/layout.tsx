@@ -1,3 +1,4 @@
+import FooterSettle from "./footer";
 import HeadSettle from "./header";
 import SideNav from "./nav-settle/sidenav";
 
@@ -15,6 +16,7 @@ export default function layoutSettle({
                     {children}
                 </div>
             </section>
+            <FooterSettle></FooterSettle>
         </main>
     );
 }
