@@ -446,7 +446,7 @@ const MultipleSelector = React.forwardRef<
                                         }}
                                         onClick={() => handleUnselect(option)}
                                     >
-                                        <div key={option.value+"borrar"}
+                                        <div key={option.value}
                                             className="h-3 w-3 mb-1 text-muted-foreground hover:text-foreground"
                                         >
                                             X
